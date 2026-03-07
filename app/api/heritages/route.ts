@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { supabase, toHeritage } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -8,15 +8,15 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get("search");
   const importance = searchParams.get("importance");
 
-  const where: Record<string, unknown> = {};
+  let query = supabase.from("heritages").select("*");
 
   if (category && category !== "all") {
-    where.category = category;
+    query = query.eq("category", category);
   }
 
   if (region && region !== "all") {
     if (region === "japan") {
-      where.countryEn = "Japan";
+      query = query.eq("country_en", "Japan");
     } else {
       const regionMap: Record<string, string> = {
         europe: "Europe and North America",
@@ -26,28 +26,28 @@ export async function GET(request: NextRequest) {
         arab: "Arab States",
       };
       if (regionMap[region]) {
-        where.region = regionMap[region];
+        query = query.eq("region", regionMap[region]);
       }
     }
   }
 
   if (search) {
-    where.OR = [
-      { nameJa: { contains: search } },
-      { nameEn: { contains: search } },
-      { countryJa: { contains: search } },
-      { shortDescJa: { contains: search } },
-    ];
+    query = query.or(
+      `name_ja.ilike.%${search}%,name_en.ilike.%${search}%,country_ja.ilike.%${search}%,short_description_ja.ilike.%${search}%`
+    );
   }
 
   if (importance) {
-    where.examImportance = { gte: parseInt(importance) };
+    query = query.gte("exam_importance", parseInt(importance));
   }
 
-  const heritages = await prisma.heritage.findMany({
-    where,
-    orderBy: [{ examImportance: "desc" }, { inscriptionYear: "asc" }],
-  });
+  query = query.order("exam_importance", { ascending: false }).order("inscription_year", { ascending: true });
 
-  return NextResponse.json(heritages);
+  const { data, error } = await query;
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json((data || []).map(toHeritage));
 }

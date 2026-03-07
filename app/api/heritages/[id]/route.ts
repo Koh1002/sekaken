@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { supabase, toHeritage } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -6,13 +6,15 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const heritage = await prisma.heritage.findUnique({
-    where: { id: parseInt(id) },
-  });
+  const { data, error } = await supabase
+    .from("heritages")
+    .select("*")
+    .eq("id", parseInt(id))
+    .single();
 
-  if (!heritage) {
+  if (error || !data) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  return NextResponse.json(heritage);
+  return NextResponse.json(toHeritage(data));
 }

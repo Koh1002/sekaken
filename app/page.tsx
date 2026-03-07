@@ -1,13 +1,16 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const totalCount = await prisma.heritage.count();
-  const japanCount = await prisma.heritage.count({
-    where: { countryEn: "Japan" },
-  });
+  const { count: totalCount } = await supabase
+    .from("heritages")
+    .select("*", { count: "exact", head: true });
+  const { count: japanCount } = await supabase
+    .from("heritages")
+    .select("*", { count: "exact", head: true })
+    .eq("country_en", "Japan");
 
   const features = [
     {

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { supabase, toHeritage } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -10,11 +10,13 @@ export default async function HeritageDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const heritage = await prisma.heritage.findUnique({
-    where: { id: parseInt(id) },
-  });
+  const { data, error } = await supabase
+    .from("heritages")
+    .select("*")
+    .eq("id", parseInt(id))
+    .single();
 
-  if (!heritage) notFound();
+  if (error || !data) notFound();
 
-  return <HeritageDetail heritage={heritage} />;
+  return <HeritageDetail heritage={toHeritage(data)} />;
 }

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { supabase, toHeritage } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import { QuizQuestion } from "@/lib/types";
 
@@ -19,12 +19,18 @@ export async function GET(request: NextRequest) {
   const region = searchParams.get("region");
   const ids = searchParams.get("ids");
 
-  const where: Record<string, unknown> = {};
-  if (category && category !== "all") where.category = category;
-  if (region === "japan") where.countryEn = "Japan";
-  if (ids) where.id = { in: ids.split(",").map(Number) };
+  let query = supabase.from("heritages").select("*");
+  if (category && category !== "all") query = query.eq("category", category);
+  if (region === "japan") query = query.eq("country_en", "Japan");
+  if (ids) query = query.in("id", ids.split(",").map(Number));
 
-  const allHeritages = await prisma.heritage.findMany({ where });
+  const { data, error } = await query;
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  const allHeritages = (data || []).map(toHeritage);
 
   if (allHeritages.length < 4) {
     return NextResponse.json({ error: "Not enough data" }, { status: 400 });
