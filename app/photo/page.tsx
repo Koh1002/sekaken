@@ -4,12 +4,22 @@ import { useState, useEffect } from "react";
 import { Heritage } from "@/lib/types";
 import { StudyButtons } from "@/components/StudyButtons";
 import { HeritageImage } from "@/components/HeritageImage";
+import { addStudyTime } from "@/lib/study-activity";
 
 export default function PhotoPage() {
   const [heritages, setHeritages] = useState<Heritage[]>([]);
   const [current, setCurrent] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // Track study time
+  useEffect(() => {
+    const start = Date.now();
+    return () => {
+      const elapsed = Math.round((Date.now() - start) / 1000);
+      if (elapsed > 3) addStudyTime(elapsed);
+    };
+  }, []);
 
   useEffect(() => {
     fetch("/api/heritages")

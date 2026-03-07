@@ -63,21 +63,29 @@ export function HeritageImage({ imageUrl, nameEn, nameJa, category, className = 
 
   if (!src || failed) {
     return (
-      <div className={`flex items-center justify-center ${className}`} style={{ background: "linear-gradient(135deg, #dfe6e9, #b2bec3)" }}>
+      <div className={`flex flex-col items-center justify-center gap-1 ${className}`} style={{ background: "linear-gradient(135deg, #dfe6e9, #b2bec3)" }}>
         <div className="text-5xl">
           {category === "Natural" ? "🌿" : category === "Mixed" ? "🌍" : "🏛️"}
         </div>
+        <span className="text-[10px] text-gray-500">※画像を取得できませんでした</span>
       </div>
     );
   }
 
   return (
-    <img
-      src={src}
-      alt={nameJa}
-      className={`object-cover ${className}`}
-      loading="lazy"
-      onError={() => { setFailed(true); setSrc(null); }}
-    />
+    <div className={`relative ${className}`}>
+      <img
+        src={src}
+        alt={nameJa}
+        className={`object-cover w-full h-full`}
+        loading="lazy"
+        onError={() => { setFailed(true); setSrc(null); }}
+      />
+      {!imageUrl && (
+        <span className="absolute bottom-1 right-1 text-[9px] bg-black/50 text-white/80 px-1.5 py-0.5 rounded">
+          ※Wikipedia自動取得（実際と異なる場合あり）
+        </span>
+      )}
+    </div>
   );
 }

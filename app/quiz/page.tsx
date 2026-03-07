@@ -3,11 +3,13 @@
 import { useState, useEffect } from "react";
 import { QuizQuestion, QuizResult } from "@/lib/types";
 import { markCorrect, markWrong } from "@/lib/study-storage";
+import { recordCorrectAnswer, recordWrongAnswer, addStudyTime } from "@/lib/study-activity";
 
 type QuizState = "setup" | "playing" | "result";
 
 export default function QuizPage() {
   const [state, setState] = useState<QuizState>("setup");
+  const [startTime, setStartTime] = useState<number>(0);
   const [quizType, setQuizType] = useState("name");
   const [count, setCount] = useState(10);
   const [region, setRegion] = useState("all");
@@ -41,6 +43,7 @@ export default function QuizPage() {
         setResults([]);
         setSelected(null);
         setState("playing");
+        setStartTime(Date.now());
         setLoading(false);
       });
   };
@@ -53,8 +56,10 @@ export default function QuizPage() {
 
     if (isCorrect) {
       markCorrect(q.heritageId);
+      recordCorrectAnswer();
     } else {
       markWrong(q.heritageId);
+      recordWrongAnswer();
     }
 
     setResults((prev) => [
@@ -71,6 +76,10 @@ export default function QuizPage() {
 
   const nextQuestion = () => {
     if (currentQ + 1 >= questions.length) {
+      // 勉強時間を記録
+      if (startTime > 0) {
+        addStudyTime(Math.round((Date.now() - startTime) / 1000));
+      }
       setState("result");
     } else {
       setCurrentQ((prev) => prev + 1);

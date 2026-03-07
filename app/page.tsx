@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { StudyStats } from "@/components/StudyStats";
+import { HomeIcon, ListIcon, MapIcon, CameraIcon, QuizIcon, ReviewIcon, ChartIcon } from "@/components/NavIcons";
 
 export const dynamic = "force-dynamic";
 
@@ -15,42 +17,42 @@ export default async function HomePage() {
   const features = [
     {
       href: "/quiz",
-      icon: "✏️",
+      IconComp: QuizIcon,
       title: "クイズ",
       desc: "4択問題で知識をテスト",
       gradient: "from-emerald-400 to-teal-500",
     },
     {
       href: "/heritage",
-      icon: "📋",
+      IconComp: ListIcon,
       title: "遺産一覧",
       desc: "世界遺産を閲覧・検索",
       gradient: "from-blue-400 to-indigo-500",
     },
     {
       href: "/photo",
-      icon: "📷",
+      IconComp: CameraIcon,
       title: "写真で学ぶ",
       desc: "フラッシュカードで写真学習",
       gradient: "from-purple-400 to-pink-500",
     },
     {
       href: "/map",
-      icon: "🗺️",
+      IconComp: MapIcon,
       title: "地図で学ぶ",
       desc: "世界地図で遺産の位置を確認",
       gradient: "from-cyan-400 to-blue-500",
     },
     {
       href: "/review",
-      icon: "🔄",
+      IconComp: ReviewIcon,
       title: "復習する",
       desc: "苦手・間違えた遺産を復習",
       gradient: "from-amber-400 to-orange-500",
     },
     {
       href: "/dashboard",
-      icon: "📊",
+      IconComp: ChartIcon,
       title: "学習進捗",
       desc: "学習状況をダッシュボードで確認",
       gradient: "from-rose-400 to-red-500",
@@ -77,8 +79,8 @@ export default async function HomePage() {
             href={f.href}
             className="card p-4 sm:p-5 flex flex-col items-start gap-2 group"
           >
-            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${f.gradient} flex items-center justify-center text-xl sm:text-2xl text-white shadow-sm`}>
-              {f.icon}
+            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${f.gradient} flex items-center justify-center text-white shadow-sm`}>
+              <f.IconComp size={22} />
             </div>
             <div>
               <h2 className="font-bold text-sm sm:text-base group-hover:text-[var(--primary)] transition-colors">{f.title}</h2>
@@ -87,6 +89,9 @@ export default async function HomePage() {
           </Link>
         ))}
       </div>
+
+      {/* Study Stats */}
+      <StudyStats />
 
       {/* Quick Start */}
       <div className="card p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ borderColor: "var(--primary)", borderWidth: "1px" }}>
