@@ -92,10 +92,10 @@ export default function HeritageListPage() {
               <tbody>
                 {heritages.map((h) => {
                   const catStyle = h.category === "Cultural"
-                    ? { bg: "rgba(79,125,243,0.1)", color: "#4f7df3" }
+                    ? { bg: "rgba(26,45,80,0.1)", color: "#1a2d50" }
                     : h.category === "Natural"
-                    ? { bg: "rgba(34,197,94,0.1)", color: "#22c55e" }
-                    : { bg: "rgba(168,85,247,0.1)", color: "#a855f7" };
+                    ? { bg: "rgba(46,139,87,0.1)", color: "#2e8b57" }
+                    : { bg: "rgba(124,109,171,0.1)", color: "#7c6dab" };
                   return (
                     <tr key={h.id} className="border-b border-[var(--border)] hover:bg-[var(--background)] cursor-pointer transition-colors"
                       onClick={() => (window.location.href = `/heritage/${h.id}`)}>
@@ -107,7 +107,7 @@ export default function HeritageListPage() {
                         </span>
                       </td>
                       <td className="p-3 text-[var(--muted)]">{h.inscriptionYear}</td>
-                      <td className="p-3" style={{ color: "#f59e42" }}>{"★".repeat(h.examImportance)}</td>
+                      <td className="p-3" style={{ color: "#c4a35a" }}>{"★".repeat(h.examImportance)}</td>
                     </tr>
                   );
                 })}

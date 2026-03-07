@@ -40,7 +40,7 @@ export function StudyButtons({
         className={btnBase}
         style={
           record.isManualReview
-            ? { background: "rgba(245,158,66,0.1)", borderColor: "rgba(245,158,66,0.3)", color: "#d97b06" }
+            ? { background: "rgba(196,163,90,0.12)", borderColor: "rgba(196,163,90,0.25)", color: "#b8963e" }
             : { borderColor: "var(--border)", color: "var(--muted)" }
         }
       >
@@ -54,7 +54,7 @@ export function StudyButtons({
         className={btnBase}
         style={
           record.isWeak
-            ? { background: "rgba(239,68,68,0.1)", borderColor: "rgba(239,68,68,0.3)", color: "var(--danger)" }
+            ? { background: "rgba(192,57,43,0.1)", borderColor: "rgba(192,57,43,0.3)", color: "var(--danger)" }
             : { borderColor: "var(--border)", color: "var(--muted)" }
         }
       >
@@ -68,7 +68,7 @@ export function StudyButtons({
         className={btnBase}
         style={
           record.isLearned
-            ? { background: "rgba(34,197,94,0.1)", borderColor: "rgba(34,197,94,0.3)", color: "var(--success)" }
+            ? { background: "rgba(46,139,87,0.1)", borderColor: "rgba(46,139,87,0.3)", color: "var(--success)" }
             : { borderColor: "var(--border)", color: "var(--muted)" }
         }
       >

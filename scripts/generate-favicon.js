@@ -1,0 +1,78 @@
+// Script to generate favicon from SVG
+const sharp = require('sharp');
+const path = require('path');
+
+const svgFavicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a2d50"/>
+      <stop offset="100%" style="stop-color:#0f1b33"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4b06a"/>
+      <stop offset="100%" style="stop-color:#b8963e"/>
+    </linearGradient>
+    <linearGradient id="globe" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3d6098"/>
+      <stop offset="100%" style="stop-color:#1a2d50"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="250" fill="url(#bg)" stroke="url(#gold)" stroke-width="12"/>
+  <!-- Globe -->
+  <circle cx="256" cy="230" r="140" fill="url(#globe)" opacity="0.9"/>
+  <!-- Globe grid lines -->
+  <ellipse cx="256" cy="230" rx="140" ry="140" fill="none" stroke="#4a7ab5" stroke-width="2" opacity="0.5"/>
+  <ellipse cx="256" cy="230" rx="90" ry="140" fill="none" stroke="#4a7ab5" stroke-width="2" opacity="0.4"/>
+  <ellipse cx="256" cy="230" rx="40" ry="140" fill="none" stroke="#4a7ab5" stroke-width="2" opacity="0.3"/>
+  <line x1="116" y1="230" x2="396" y2="230" stroke="#4a7ab5" stroke-width="2" opacity="0.4"/>
+  <line x1="130" y1="180" x2="382" y2="180" stroke="#4a7ab5" stroke-width="2" opacity="0.3"/>
+  <line x1="130" y1="280" x2="382" y2="280" stroke="#4a7ab5" stroke-width="2" opacity="0.3"/>
+  <!-- Gold "2" -->
+  <text x="256" y="265" font-family="serif" font-size="160" font-weight="bold" fill="url(#gold)" text-anchor="middle" dominant-baseline="middle" opacity="0.95">2</text>
+  <!-- Bottom ribbon shape -->
+  <path d="M120 390 Q256 360 392 390 L380 430 Q256 410 132 430 Z" fill="url(#gold)"/>
+  <!-- Text on ribbon -->
+  <text x="256" y="418" font-family="sans-serif" font-size="36" font-weight="bold" fill="#1a2d50" text-anchor="middle" dominant-baseline="middle">世界遺産検定</text>
+</svg>`;
+
+async function generate() {
+  const publicDir = path.join(__dirname, '..', 'public');
+
+  // Generate favicon.ico (32x32)
+  await sharp(Buffer.from(svgFavicon))
+    .resize(32, 32)
+    .png()
+    .toFile(path.join(publicDir, 'favicon-32.png'));
+
+  // Generate apple-touch-icon (180x180)
+  await sharp(Buffer.from(svgFavicon))
+    .resize(180, 180)
+    .png()
+    .toFile(path.join(publicDir, 'apple-touch-icon.png'));
+
+  // Generate icon-192 for PWA
+  await sharp(Buffer.from(svgFavicon))
+    .resize(192, 192)
+    .png()
+    .toFile(path.join(publicDir, 'icon-192.png'));
+
+  // Generate icon-512 for PWA
+  await sharp(Buffer.from(svgFavicon))
+    .resize(512, 512)
+    .png()
+    .toFile(path.join(publicDir, 'icon-512.png'));
+
+  // Generate .ico file (actually just a renamed png, browsers handle it)
+  await sharp(Buffer.from(svgFavicon))
+    .resize(48, 48)
+    .png()
+    .toFile(path.join(publicDir, 'favicon.ico'));
+
+  // Also save the SVG for use in the app
+  require('fs').writeFileSync(path.join(publicDir, 'logo.svg'), svgFavicon);
+
+  console.log('Favicons and logo generated successfully!');
+}
+
+generate().catch(console.error);

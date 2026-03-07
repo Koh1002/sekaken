@@ -19,7 +19,7 @@ export default function AuthPage() {
       <div className="max-w-md mx-auto space-y-6 py-8">
         <div className="text-center">
           <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
-            style={{ background: "rgba(34,197,94,0.1)", color: "var(--success)" }}>
+            style={{ background: "rgba(46,139,87,0.1)", color: "var(--success)" }}>
             <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
               <circle cx="12" cy="7" r="4" />
@@ -29,7 +29,7 @@ export default function AuthPage() {
           <p className="text-sm text-[var(--muted)]">{user.email}</p>
         </div>
 
-        <div className="card p-4 text-sm" style={{ borderColor: "rgba(34,197,94,0.3)" }}>
+        <div className="card p-4 text-sm" style={{ borderColor: "rgba(46,139,87,0.3)" }}>
           <p className="font-semibold mb-1" style={{ color: "var(--success)" }}>学習データはクラウドに同期中</p>
           <p className="text-[var(--muted)]">
             別のデバイスからも同じアカウントでログインすれば学習記録が引き継がれます。
@@ -42,7 +42,7 @@ export default function AuthPage() {
             router.push("/");
           }}
           className="w-full py-3 rounded-xl font-semibold border transition-colors"
-          style={{ borderColor: "rgba(239,68,68,0.3)", color: "var(--danger)" }}
+          style={{ borderColor: "rgba(192,57,43,0.3)", color: "var(--danger)" }}
         >
           ログアウト
         </button>
@@ -112,12 +112,12 @@ export default function AuthPage() {
         </div>
 
         {error && (
-          <div className="rounded-xl p-3 text-sm" style={{ background: "rgba(239,68,68,0.06)", color: "var(--danger)", border: "1px solid rgba(239,68,68,0.2)" }}>
+          <div className="rounded-xl p-3 text-sm" style={{ background: "rgba(192,57,43,0.06)", color: "var(--danger)", border: "1px solid rgba(192,57,43,0.2)" }}>
             {error}
           </div>
         )}
         {success && (
-          <div className="rounded-xl p-3 text-sm" style={{ background: "rgba(34,197,94,0.06)", color: "var(--success)", border: "1px solid rgba(34,197,94,0.2)" }}>
+          <div className="rounded-xl p-3 text-sm" style={{ background: "rgba(46,139,87,0.06)", color: "var(--success)", border: "1px solid rgba(46,139,87,0.2)" }}>
             {success}
           </div>
         )}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { StudyStats } from "@/components/StudyStats";
 import { ListIcon, MapIcon, CameraIcon, QuizIcon, ReviewIcon, ChartIcon } from "@/components/NavIcons";
@@ -20,64 +21,67 @@ export default async function HomePage() {
       IconComp: QuizIcon,
       title: "クイズ",
       desc: "4択問題で知識をテスト",
-      color: "#4f7df3",
-      bg: "rgba(79,125,243,0.08)",
+      color: "#1a2d50",
+      bg: "rgba(26,45,80,0.08)",
     },
     {
       href: "/heritage",
       IconComp: ListIcon,
       title: "遺産一覧",
       desc: "世界遺産を閲覧・検索",
-      color: "#6366f1",
-      bg: "rgba(99,102,241,0.08)",
+      color: "#3d6098",
+      bg: "rgba(61,96,152,0.08)",
     },
     {
       href: "/photo",
       IconComp: CameraIcon,
       title: "写真で学ぶ",
       desc: "フラッシュカードで写真学習",
-      color: "#a855f7",
-      bg: "rgba(168,85,247,0.08)",
+      color: "#c4a35a",
+      bg: "rgba(196,163,90,0.1)",
     },
     {
       href: "/map",
       IconComp: MapIcon,
       title: "地図で学ぶ",
       desc: "世界地図で遺産の位置を確認",
-      color: "#06b6d4",
-      bg: "rgba(6,182,212,0.08)",
+      color: "#2d4a7a",
+      bg: "rgba(45,74,122,0.08)",
     },
     {
       href: "/review",
       IconComp: ReviewIcon,
       title: "復習する",
       desc: "苦手・間違えた遺産を復習",
-      color: "#f59e42",
-      bg: "rgba(245,158,66,0.08)",
+      color: "#b8963e",
+      bg: "rgba(184,150,62,0.1)",
     },
     {
       href: "/dashboard",
       IconComp: ChartIcon,
       title: "学習進捗",
       desc: "学習状況をダッシュボードで確認",
-      color: "#22c55e",
-      bg: "rgba(34,197,94,0.08)",
+      color: "#2e8b57",
+      bg: "rgba(46,139,87,0.08)",
     },
   ];
 
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
-      <div>
-        <h1 className="text-xl md:text-2xl font-bold tracking-tight">世界遺産検定2級</h1>
-        <p className="text-sm text-[var(--muted)] mt-1">
-          {totalCount}件の世界遺産（日本{japanCount}件）で学習しよう
-        </p>
+      <div className="flex items-center gap-4">
+        <Image src="/icon-192.png" alt="セカケン" width={56} height={56} className="shrink-0 hidden md:block" />
+        <div>
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight">世界遺産検定2級</h1>
+          <p className="text-sm text-[var(--muted)] mt-1">
+            {totalCount}件の世界遺産（日本{japanCount}件）で学習しよう
+          </p>
+        </div>
       </div>
 
       {/* Quick Actions */}
       <div className="flex gap-3">
-        <Link href="/quiz" className="btn-primary text-sm text-center flex-1 md:flex-none">
+        <Link href="/quiz" className="btn-accent text-sm text-center flex-1 md:flex-none">
           クイズ開始
         </Link>
         <Link href="/review" className="btn-secondary text-sm text-center flex-1 md:flex-none">
@@ -90,7 +94,7 @@ export default async function HomePage() {
 
       {/* Feature Grid */}
       <div>
-        <h2 className="text-sm font-semibold text-[var(--muted)] uppercase tracking-wider mb-3">学習メニュー</h2>
+        <h2 className="text-xs font-semibold text-[var(--muted)] uppercase tracking-wider mb-3">学習メニュー</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {features.map((f) => (
             <Link
@@ -105,7 +109,7 @@ export default async function HomePage() {
                 <f.IconComp size={20} />
               </div>
               <div className="min-w-0">
-                <h3 className="font-semibold text-sm group-hover:text-[var(--primary)] transition-colors">{f.title}</h3>
+                <h3 className="font-semibold text-sm group-hover:text-[var(--accent-dark)] transition-colors">{f.title}</h3>
                 <p className="text-xs text-[var(--muted)] mt-0.5 hidden md:block">{f.desc}</p>
               </div>
             </Link>

@@ -63,7 +63,7 @@ export default function PhotoPage() {
     <div className="max-w-2xl mx-auto space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="page-header">写真で学ぶ</h1>
-        <span className="badge" style={{ background: "rgba(79,125,243,0.1)", color: "var(--primary)" }}>
+        <span className="badge" style={{ background: "rgba(196,163,90,0.12)", color: "var(--accent-dark)" }}>
           {current + 1} / {heritages.length}
         </span>
       </div>
@@ -96,8 +96,8 @@ export default function PhotoPage() {
                   {h.inscriptionYear}年
                 </span>
                 <span className="badge" style={{
-                  background: h.category === "Cultural" ? "rgba(79,125,243,0.1)" : h.category === "Natural" ? "rgba(34,197,94,0.1)" : "rgba(168,85,247,0.1)",
-                  color: h.category === "Cultural" ? "#4f7df3" : h.category === "Natural" ? "#22c55e" : "#a855f7"
+                  background: h.category === "Cultural" ? "rgba(196,163,90,0.12)" : h.category === "Natural" ? "rgba(46,139,87,0.1)" : "rgba(124,109,171,0.1)",
+                  color: h.category === "Cultural" ? "#1a2d50" : h.category === "Natural" ? "#2e8b57" : "#7c6dab"
                 }}>
                   {h.category === "Cultural" ? "文化遺産" : h.category === "Natural" ? "自然遺産" : "複合遺産"}
                 </span>
@@ -106,7 +106,7 @@ export default function PhotoPage() {
                 <p className="text-sm text-[var(--muted)] leading-relaxed">{h.shortDescJa}</p>
               )}
               {h.memoryTipJa && (
-                <div className="rounded-xl p-3 text-sm" style={{ background: "rgba(245,158,66,0.08)", border: "1px solid rgba(245,158,66,0.2)" }}>
+                <div className="rounded-xl p-3 text-sm" style={{ background: "rgba(196,163,90,0.1)", border: "1px solid rgba(196,163,90,0.2)" }}>
                   💡 {h.memoryTipJa}
                 </div>
               )}

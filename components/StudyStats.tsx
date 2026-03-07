@@ -32,8 +32,8 @@ function MiniChart({ data, dataKey }: { data: DailyActivity[]; dataKey: "studySe
               height: `${height}%`,
               background: v > 0
                 ? isToday
-                  ? "var(--primary)"
-                  : "rgba(79,125,243,0.3)"
+                  ? "var(--accent)"
+                  : "rgba(196,163,90,0.3)"
                 : "var(--unknown)",
               minWidth: "4px",
               borderRadius: "3px 3px 0 0",
@@ -80,19 +80,19 @@ export function StudyStats() {
       <div className="grid grid-cols-3 gap-3">
         <div className="card p-4">
           <p className="text-xs text-[var(--muted)] mb-1">今日の学習</p>
-          <p className="text-xl font-bold" style={{ color: "var(--primary)" }}>
+          <p className="text-xl font-bold" style={{ color: "var(--accent-dark)" }}>
             {formatTime(todayTime)}
           </p>
         </div>
         <div className="card p-4">
           <p className="text-xs text-[var(--muted)] mb-1">今日の回答数</p>
-          <p className="text-xl font-bold" style={{ color: "var(--primary)" }}>
+          <p className="text-xl font-bold" style={{ color: "var(--accent-dark)" }}>
             {todayAnswers}
           </p>
         </div>
         <div className="card p-4">
           <p className="text-xs text-[var(--muted)] mb-1">学習日数</p>
-          <p className="text-xl font-bold" style={{ color: "var(--primary)" }}>
+          <p className="text-xl font-bold" style={{ color: "var(--accent-dark)" }}>
             {stats.totalDays}
           </p>
         </div>

@@ -4,7 +4,7 @@ interface IconProps {
   active?: boolean;
 }
 
-const color = (active: boolean) => active ? "var(--primary)" : "currentColor";
+const color = (active: boolean) => active ? "currentColor" : "currentColor";
 const sw = (active: boolean) => active ? 2.2 : 1.8;
 
 export function HomeIcon({ size = 20, active = false }: IconProps) {

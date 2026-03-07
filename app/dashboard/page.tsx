@@ -112,9 +112,9 @@ export default function DashboardPage() {
       </div>
 
       {stats.recommended.length > 0 && (
-        <div className="card p-5 space-y-3" style={{ borderColor: "rgba(245,158,66,0.3)" }}>
+        <div className="card p-5 space-y-3" style={{ borderColor: "rgba(196,163,90,0.25)" }}>
           <h2 className="font-semibold text-sm flex items-center gap-2">
-            <span className="w-6 h-6 rounded-md flex items-center justify-center text-xs" style={{ background: "rgba(245,158,66,0.12)", color: "var(--warning)" }}>★</span>
+            <span className="w-6 h-6 rounded-md flex items-center justify-center text-xs" style={{ background: "rgba(196,163,90,0.12)", color: "var(--warning)" }}>★</span>
             今日のおすすめ復習
           </h2>
           <div className="space-y-1.5">
@@ -138,9 +138,9 @@ export default function DashboardPage() {
       )}
 
       {stats.recentWrong.length > 0 && (
-        <div className="card p-5 space-y-3" style={{ borderColor: "rgba(239,68,68,0.3)" }}>
+        <div className="card p-5 space-y-3" style={{ borderColor: "rgba(192,57,43,0.3)" }}>
           <h2 className="font-semibold text-sm flex items-center gap-2">
-            <span className="w-6 h-6 rounded-md flex items-center justify-center text-xs" style={{ background: "rgba(239,68,68,0.1)", color: "var(--danger)" }}>×</span>
+            <span className="w-6 h-6 rounded-md flex items-center justify-center text-xs" style={{ background: "rgba(192,57,43,0.1)", color: "var(--danger)" }}>×</span>
             最近間違えた遺産
           </h2>
           <div className="space-y-1.5">

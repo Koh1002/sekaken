@@ -18,10 +18,10 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
 
   const catStyle =
     heritage.category === "Cultural"
-      ? { bg: "rgba(79,125,243,0.1)", color: "#4f7df3" }
+      ? { bg: "rgba(26,45,80,0.1)", color: "#1a2d50" }
       : heritage.category === "Natural"
-      ? { bg: "rgba(34,197,94,0.1)", color: "#22c55e" }
-      : { bg: "rgba(168,85,247,0.1)", color: "#a855f7" };
+      ? { bg: "rgba(46,139,87,0.1)", color: "#2e8b57" }
+      : { bg: "rgba(124,109,171,0.1)", color: "#7c6dab" };
 
   return (
     <div className="max-w-3xl space-y-5">
@@ -64,19 +64,19 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
         <InfoItem
           label="検定重要度"
           value={"★".repeat(heritage.examImportance)}
-          valueColor="#f59e42"
+          valueColor="#c4a35a"
         />
       </div>
 
       {heritage.shortDescJa && (
-        <div className="card p-4" style={{ borderColor: "rgba(79,125,243,0.3)" }}>
+        <div className="card p-4" style={{ borderColor: "rgba(26,45,80,0.2)" }}>
           <h2 className="font-semibold text-sm mb-1.5" style={{ color: "var(--primary)" }}>概要</h2>
           <p className="text-sm leading-relaxed">{heritage.shortDescJa}</p>
         </div>
       )}
 
       {heritage.memoryTipJa && (
-        <div className="card p-4" style={{ borderColor: "rgba(245,158,66,0.3)" }}>
+        <div className="card p-4" style={{ borderColor: "rgba(196,163,90,0.25)" }}>
           <h2 className="font-semibold text-sm mb-1.5" style={{ color: "var(--accent-dark)" }}>覚え方のポイント</h2>
           <p className="text-sm leading-relaxed">{heritage.memoryTipJa}</p>
         </div>

@@ -165,7 +165,7 @@ export default function QuizPage() {
             {wrongResults.map((r) => {
               const q = questions.find((q) => q.id === r.questionId)!;
               return (
-                <div key={r.questionId} className="card p-3.5 text-sm space-y-1" style={{ borderColor: "rgba(239,68,68,0.3)" }}>
+                <div key={r.questionId} className="card p-3.5 text-sm space-y-1" style={{ borderColor: "rgba(192,57,43,0.3)" }}>
                   <p className="font-medium">{q.question}</p>
                   <p style={{ color: "var(--danger)" }}>あなたの回答: {q.options[r.selectedIndex]}</p>
                   <p style={{ color: "var(--success)" }}>正解: {q.options[r.correctIndex]}</p>
@@ -202,7 +202,7 @@ export default function QuizPage() {
     <div className="max-w-lg mx-auto space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-base font-bold">問題 {currentQ + 1} / {questions.length}</h1>
-        <span className="badge" style={{ background: "rgba(79,125,243,0.1)", color: "var(--primary)" }}>
+        <span className="badge" style={{ background: "rgba(196,163,90,0.12)", color: "var(--accent-dark)" }}>
           正答: {results.filter((r) => r.isCorrect).length}
         </span>
       </div>
@@ -228,9 +228,9 @@ export default function QuizPage() {
           if (selected !== null) {
             extraClass = "";
             if (idx === q.correctIndex) {
-              style = { borderColor: "var(--success)", background: "rgba(34,197,94,0.06)", color: "var(--success)" };
+              style = { borderColor: "var(--success)", background: "rgba(46,139,87,0.06)", color: "var(--success)" };
             } else if (idx === selected && idx !== q.correctIndex) {
-              style = { borderColor: "var(--danger)", background: "rgba(239,68,68,0.06)", color: "var(--danger)" };
+              style = { borderColor: "var(--danger)", background: "rgba(192,57,43,0.06)", color: "var(--danger)" };
             }
           }
           return (

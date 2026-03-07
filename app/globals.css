@@ -1,46 +1,54 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f0f4f8;
-  --foreground: #1e293b;
-  --primary: #4f7df3;
-  --primary-light: #93b4fd;
-  --primary-dark: #3b63c9;
-  --accent: #f59e42;
-  --accent-dark: #d97b06;
-  --success: #22c55e;
-  --warning: #f59e42;
-  --danger: #ef4444;
-  --muted: #94a3b8;
+  /* ロゴベースのネイビー×ゴールド配色 */
+  --background: #f0f2f7;
+  --foreground: #1a2d50;
+  --primary: #1a2d50;
+  --primary-light: #3d6098;
+  --primary-dark: #0f1b33;
+  --accent: #c4a35a;
+  --accent-light: #d4b06a;
+  --accent-dark: #b8963e;
+  --success: #2e8b57;
+  --warning: #c4a35a;
+  --danger: #c0392b;
+  --muted: #7a8599;
   --card-bg: #ffffff;
-  --border: #e2e8f0;
-  --sidebar-bg: #ffffff;
-  --sidebar-active: #eef2ff;
-  --memorized: #22c55e;
-  --in-progress: #f59e42;
-  --weak: #ef4444;
-  --unknown: #e2e8f0;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+  --border: #dce1ea;
+  --sidebar-bg: #1a2d50;
+  --sidebar-text: #a0b0cc;
+  --sidebar-active: rgba(196,163,90,0.15);
+  --sidebar-active-text: #d4b06a;
+  --memorized: #2e8b57;
+  --in-progress: #c4a35a;
+  --weak: #c0392b;
+  --unknown: #dce1ea;
+  --shadow-sm: 0 1px 3px rgba(26,45,80,0.06);
+  --shadow-md: 0 4px 14px rgba(26,45,80,0.10);
+  --shadow-lg: 0 8px 28px rgba(26,45,80,0.14);
   --radius: 14px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0f172a;
-    --foreground: #e2e8f0;
-    --primary: #6d8fef;
-    --primary-light: #93b4fd;
-    --primary-dark: #4f7df3;
-    --card-bg: #1e293b;
-    --border: #334155;
-    --muted: #64748b;
-    --sidebar-bg: #1e293b;
-    --sidebar-active: #1e3a5f;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
-    --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+    --background: #0d1425;
+    --foreground: #d4dbe8;
+    --primary: #3d6098;
+    --primary-light: #5a80b8;
+    --primary-dark: #1a2d50;
+    --accent: #d4b06a;
+    --accent-dark: #c4a35a;
+    --card-bg: #162035;
+    --border: #253552;
+    --muted: #5e6f8a;
+    --sidebar-bg: #0f1b33;
+    --sidebar-text: #7a8da8;
+    --sidebar-active: rgba(196,163,90,0.15);
+    --sidebar-active-text: #d4b06a;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 28px rgba(0,0,0,0.5);
   }
 }
 
@@ -71,6 +79,20 @@ body {
   transform: scale(0.98);
 }
 
+.btn-accent {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #1a2d50;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 700;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+.btn-accent:hover {
+  box-shadow: var(--shadow-md);
+  filter: brightness(1.05);
+}
+
 .btn-secondary {
   background: var(--card-bg);
   color: var(--foreground);
@@ -81,8 +103,8 @@ body {
   transition: all 0.2s;
 }
 .btn-secondary:hover {
-  border-color: var(--primary);
-  color: var(--primary);
+  border-color: var(--accent);
+  color: var(--accent-dark);
 }
 
 /* カード共通 */
@@ -107,7 +129,7 @@ body {
 .progress-bar-fill {
   height: 100%;
   border-radius: 999px;
-  background: var(--primary);
+  background: linear-gradient(90deg, var(--accent-dark), var(--accent));
   transition: width 0.5s ease;
 }
 
@@ -131,8 +153,8 @@ body {
 }
 .form-input:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(79,125,243,0.12);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(196,163,90,0.15);
 }
 
 /* タグ/バッジ */
@@ -158,8 +180,8 @@ body {
   background: var(--card-bg);
 }
 .filter-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
+  border-color: var(--accent);
+  color: var(--accent-dark);
 }
 .filter-btn-active {
   background: var(--primary);

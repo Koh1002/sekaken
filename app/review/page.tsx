@@ -149,29 +149,29 @@ export default function ReviewPage() {
                       {item.heritage.inscriptionYear}年
                     </p>
                   </div>
-                  <span className="badge" style={{ background: "rgba(245,158,66,0.1)", color: "#d97b06" }}>
+                  <span className="badge" style={{ background: "rgba(196,163,90,0.12)", color: "#b8963e" }}>
                     優先度: {item.score.toFixed(1)}
                   </span>
                 </div>
 
                 <div className="flex flex-wrap gap-1.5">
                   {item.record.isWeak && (
-                    <span className="badge" style={{ background: "rgba(239,68,68,0.1)", color: "var(--danger)" }}>
+                    <span className="badge" style={{ background: "rgba(192,57,43,0.1)", color: "var(--danger)" }}>
                       苦手
                     </span>
                   )}
                   {item.record.isManualReview && (
-                    <span className="badge" style={{ background: "rgba(245,158,66,0.1)", color: "#d97b06" }}>
+                    <span className="badge" style={{ background: "rgba(196,163,90,0.12)", color: "#b8963e" }}>
                       復習登録
                     </span>
                   )}
                   {item.record.wrongCount > 0 && (
-                    <span className="badge" style={{ background: "rgba(239,68,68,0.1)", color: "var(--danger)" }}>
+                    <span className="badge" style={{ background: "rgba(192,57,43,0.1)", color: "var(--danger)" }}>
                       誤答{item.record.wrongCount}回
                     </span>
                   )}
                   {item.record.correctStreak > 0 && (
-                    <span className="badge" style={{ background: "rgba(34,197,94,0.1)", color: "var(--success)" }}>
+                    <span className="badge" style={{ background: "rgba(46,139,87,0.1)", color: "var(--success)" }}>
                       連続正解{item.record.correctStreak}
                     </span>
                   )}

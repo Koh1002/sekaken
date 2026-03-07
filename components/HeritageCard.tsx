@@ -14,10 +14,10 @@ export function HeritageCard({ heritage }: { heritage: Heritage }) {
       : "複合";
   const categoryStyle =
     heritage.category === "Cultural"
-      ? { bg: "rgba(79,125,243,0.1)", color: "#4f7df3" }
+      ? { bg: "rgba(26,45,80,0.1)", color: "#1a2d50" }
       : heritage.category === "Natural"
-      ? { bg: "rgba(34,197,94,0.1)", color: "#22c55e" }
-      : { bg: "rgba(168,85,247,0.1)", color: "#a855f7" };
+      ? { bg: "rgba(46,139,87,0.1)", color: "#2e8b57" }
+      : { bg: "rgba(124,109,171,0.1)", color: "#7c6dab" };
 
   return (
     <div className="card overflow-hidden">
@@ -35,7 +35,7 @@ export function HeritageCard({ heritage }: { heritage: Heritage }) {
         >
           {categoryLabel}
         </span>
-        <span className="absolute top-2.5 right-2.5 badge" style={{ background: "rgba(255,255,255,0.92)", color: "#f59e42" }}>
+        <span className="absolute top-2.5 right-2.5 badge" style={{ background: "rgba(255,255,255,0.92)", color: "#c4a35a" }}>
           {"★".repeat(heritage.examImportance)}
         </span>
       </div>
