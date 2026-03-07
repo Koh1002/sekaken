@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build",
+    "vercel-build": "next build",
     "seed": "npx tsx scripts/seed-db.ts",
     "validate": "npx tsx scripts/validate-data.ts"
   },
@@ -18,7 +17,6 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^6.19.2",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.98.0",
     "@tailwindcss/postcss": "^4.2.1",
@@ -29,7 +27,6 @@
     "leaflet": "^1.9.4",
     "next": "^16.1.6",
     "postcss": "^8.5.8",
-    "prisma": "^6.19.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-leaflet": "^5.0.0",
