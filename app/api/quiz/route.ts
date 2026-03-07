@@ -71,6 +71,16 @@ export async function GET(request: NextRequest) {
         correctIndex = allOptions.indexOf(h.nameJa);
         break;
       }
+      case "map": {
+        question = `緯度${h.latitude.toFixed(1)}°, 経度${h.longitude.toFixed(1)}°付近にある世界遺産は？（${h.countryJa}）`;
+        const allOpts = shuffle([
+          h.nameJa,
+          ...others.map((o) => o.nameJa),
+        ]);
+        options = allOpts;
+        correctIndex = allOpts.indexOf(h.nameJa);
+        break;
+      }
       case "truefalse": {
         const isTrue = Math.random() > 0.5;
         if (isTrue) {

@@ -95,6 +95,7 @@ export default function QuizPage() {
               <option value="country">遺産から国を当てる</option>
               <option value="photo">写真から遺産名を当てる</option>
               <option value="description">説明から遺産名を当てる</option>
+              <option value="map">地図(座標)から遺産を当てる</option>
               <option value="truefalse">○×問題</option>
             </select>
           </div>
@@ -186,7 +187,7 @@ export default function QuizPage() {
           </div>
         )}
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => {
               setState("setup");
@@ -202,6 +203,17 @@ export default function QuizPage() {
           >
             復習する
           </button>
+          {wrongResults.length > 0 && (
+            <button
+              onClick={() => {
+                const wrongIds = wrongResults.map((r) => r.heritageId).join(",");
+                window.location.href = `/quiz?ids=${wrongIds}`;
+              }}
+              className="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:opacity-90"
+            >
+              間違えた問題だけ復習 ({wrongResults.length}問)
+            </button>
+          )}
         </div>
       </div>
     );

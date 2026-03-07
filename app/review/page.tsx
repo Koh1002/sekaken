@@ -16,7 +16,7 @@ interface ReviewItem {
 export default function ReviewPage() {
   const [items, setItems] = useState<ReviewItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<"all" | "weak" | "manual" | "wrong">(
+  const [filter, setFilter] = useState<"all" | "high" | "weak" | "manual" | "wrong">(
     "all"
   );
 
@@ -52,6 +52,7 @@ export default function ReviewPage() {
   };
 
   const filtered = items.filter((item) => {
+    if (filter === "high") return item.score >= 15;
     if (filter === "weak") return item.record.isWeak;
     if (filter === "manual") return item.record.isManualReview;
     if (filter === "wrong") return item.record.wrongCount > 0;
@@ -72,6 +73,7 @@ export default function ReviewPage() {
         {(
           [
             ["all", "すべて"],
+            ["high", "高優先度"],
             ["weak", "苦手"],
             ["manual", "復習登録"],
             ["wrong", "間違えた"],
@@ -112,13 +114,21 @@ export default function ReviewPage() {
             {filtered.length}件の復習対象
           </p>
 
-          <div className="flex gap-2 mb-2">
+          <div className="flex flex-wrap gap-2 mb-2">
             <Link
-              href="/quiz"
+              href={`/quiz?ids=${filtered.map((i) => i.heritage.id).join(",")}`}
               className="bg-[var(--primary)] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90"
             >
-              全部復習クイズ
+              全部復習クイズ ({filtered.length}件)
             </Link>
+            {items.filter((i) => i.score >= 15).length > 0 && filter !== "high" && (
+              <button
+                onClick={() => setFilter("high")}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90"
+              >
+                高優先度のみ表示
+              </button>
+            )}
             <Link
               href="/photo"
               className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90"

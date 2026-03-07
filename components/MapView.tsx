@@ -58,17 +58,25 @@ export default function MapView({ heritages }: { heritages: Heritage[] }) {
           icon={getIcon(h.category)}
         >
           <Popup>
-            <div className="text-sm">
+            <div className="text-sm space-y-1">
               <p className="font-bold">{h.nameJa}</p>
               <p className="text-gray-500">
                 {h.countryJa} ・ {h.inscriptionYear}年
               </p>
-              <Link
-                href={`/heritage/${h.id}`}
-                className="text-blue-600 hover:underline text-xs"
-              >
-                詳細を見る →
-              </Link>
+              <div className="flex gap-2">
+                <Link
+                  href={`/heritage/${h.id}`}
+                  className="text-blue-600 hover:underline text-xs"
+                >
+                  詳細 →
+                </Link>
+                <Link
+                  href={`/quiz?ids=${h.id}`}
+                  className="text-green-600 hover:underline text-xs"
+                >
+                  クイズ
+                </Link>
+              </div>
             </div>
           </Popup>
         </Marker>

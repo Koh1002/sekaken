@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Heritage } from "@/lib/types";
 import { StudyButtons } from "./StudyButtons";
+
+const DetailMap = dynamic(() => import("./DetailMap"), { ssr: false });
 
 export function HeritageDetail({ heritage }: { heritage: Heritage }) {
   const categoryLabel =
@@ -81,6 +84,10 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
           ))}
         </div>
       )}
+
+      <div className="rounded-xl overflow-hidden h-48">
+        <DetailMap latitude={heritage.latitude} longitude={heritage.longitude} name={heritage.nameJa} />
+      </div>
 
       <div className="space-y-2 text-xs text-[var(--muted)]">
         <h3 className="font-bold text-sm text-[var(--foreground)]">出典・リンク</h3>
