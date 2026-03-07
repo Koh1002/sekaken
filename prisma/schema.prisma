@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Heritage {
+  id               Int      @id
+  nameJa           String   @map("name_ja")
+  nameEn           String   @map("name_en")
+  countryJa        String   @map("country_ja")
+  countryEn        String   @map("country_en")
+  region           String
+  category         String
+  inscriptionYear  Int      @map("inscription_year")
+  latitude         Float
+  longitude        Float
+  shortDescJa      String?  @map("short_description_ja")
+  memoryTipJa      String?  @map("memory_tip_ja")
+  tags             String?
+  unescoCriteria   String?  @map("unesco_criteria")
+  officialUrl      String?  @map("official_url")
+  unescoUrl        String   @map("unesco_url")
+  sourceUrls       String?  @map("source_urls")
+  imageUrl         String?  @map("image_url")
+  imageAttribution String?  @map("image_attribution")
+  examImportance   Int      @default(3) @map("exam_importance")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("heritages")
+}

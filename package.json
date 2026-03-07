@@ -1,0 +1,37 @@
+{
+  "name": "sekaken",
+  "version": "1.0.0",
+  "description": "世界遺産検定2級 学習アプリ",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build",
+    "seed": "npx tsx scripts/seed-db.ts",
+    "validate": "npx tsx scripts/validate-data.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:49633/git/Koh1002/sekaken"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.19.2",
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/leaflet": "^1.9.21",
+    "@types/node": "^25.3.5",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "leaflet": "^1.9.4",
+    "next": "^16.1.6",
+    "postcss": "^8.5.8",
+    "prisma": "^6.19.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-leaflet": "^5.0.0",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3"
+  }
+}
