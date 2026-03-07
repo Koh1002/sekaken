@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Heritage } from "@/lib/types";
-import { getAllRecords } from "@/lib/study-storage";
+import { getAllRecordsAsync } from "@/lib/study-storage";
 import { calculateReviewScore, getEmptyRecord } from "@/lib/review-score";
 import Link from "next/link";
 
@@ -25,7 +25,7 @@ export default function DashboardPage() {
   }, []);
 
   const loadStats = async () => {
-    const records = getAllRecords();
+    const records = await getAllRecordsAsync();
     const res = await fetch("/api/heritages");
     const heritages: Heritage[] = await res.json();
 
