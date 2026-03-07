@@ -1956,7 +1956,7 @@ export const europeHeritages = [
     examImportance: 3
   },
   {
-    id: 1094,
+    id: 723,
     nameJa: "シントラの文化的景観",
     nameEn: "Cultural Landscape of Sintra",
     countryJa: "ポルトガル",
