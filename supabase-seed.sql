@@ -1,9 +1,11 @@
 -- World Heritage data seed for Supabase
--- Generated: 2026-03-07T15:37:26.171Z
+-- Generated: 2026-03-07T15:40:50.403Z
 -- Total entries: 301
 
--- Create table if not exists
-CREATE TABLE IF NOT EXISTS heritages (
+-- Drop existing table and recreate
+DROP TABLE IF EXISTS heritages;
+
+CREATE TABLE heritages (
   id INTEGER PRIMARY KEY,
   name_ja TEXT NOT NULL,
   name_en TEXT NOT NULL,
@@ -25,9 +27,6 @@ CREATE TABLE IF NOT EXISTS heritages (
   image_attribution TEXT,
   exam_importance INTEGER NOT NULL DEFAULT 3
 );
-
--- Clear existing data
-TRUNCATE TABLE heritages;
 
 -- Insert all heritage data
 INSERT INTO heritages (id, name_ja, name_en, country_ja, country_en, region, category, inscription_year, latitude, longitude, short_description_ja, memory_tip_ja, tags, unesco_criteria, official_url, unesco_url, source_urls, image_url, image_attribution, exam_importance) VALUES (660, '法隆寺地域の仏教建造物', 'Buddhist Monuments in the Horyu-ji Area', '日本', 'Japan', 'Asia and the Pacific', 'Cultural', 1993, 34.6145, 135.7344, '世界最古の木造建築群を含む法隆寺の仏教建造物群。聖徳太子ゆかりの寺院。', '日本初の世界遺産の一つ。「世界最古の木造建築」がキーワード。登録基準(i)(ii)(iv)(vi)。', '日本初,木造建築,奈良,聖徳太子,飛鳥時代', '(i)(ii)(iv)(vi)', 'http://www.horyuji.or.jp/', 'https://whc.unesco.org/en/list/660', 'https://www.bunka.go.jp/seisaku/bunkazai/shokai/sekai_isan/ichiran/', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Horyu-ji08s3200.jpg/640px-Horyu-ji08s3200.jpg', '663highland, CC BY 2.5, via Wikimedia Commons', 5);

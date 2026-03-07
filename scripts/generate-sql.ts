@@ -12,8 +12,10 @@ console.log("-- World Heritage data seed for Supabase");
 console.log("-- Generated: " + new Date().toISOString());
 console.log(`-- Total entries: ${allHeritages.length}`);
 console.log("");
-console.log("-- Create table if not exists");
-console.log(`CREATE TABLE IF NOT EXISTS heritages (
+console.log("-- Drop existing table and recreate");
+console.log("DROP TABLE IF EXISTS heritages;");
+console.log("");
+console.log(`CREATE TABLE heritages (
   id INTEGER PRIMARY KEY,
   name_ja TEXT NOT NULL,
   name_en TEXT NOT NULL,
@@ -35,9 +37,6 @@ console.log(`CREATE TABLE IF NOT EXISTS heritages (
   image_attribution TEXT,
   exam_importance INTEGER NOT NULL DEFAULT 3
 );`);
-console.log("");
-console.log("-- Clear existing data");
-console.log("TRUNCATE TABLE heritages;");
 console.log("");
 console.log("-- Insert all heritage data");
 
