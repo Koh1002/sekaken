@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Heritage } from "@/lib/types";
 import { StudyButtons } from "@/components/StudyButtons";
+import { HeritageImage } from "@/components/HeritageImage";
 
 export function HeritageCard({ heritage }: { heritage: Heritage }) {
   const categoryLabel =
@@ -19,26 +20,21 @@ export function HeritageCard({ heritage }: { heritage: Heritage }) {
       : "bg-purple-100 text-purple-700";
 
   return (
-    <div className="border border-[var(--border)] rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-      <div className="h-40 bg-gray-100 relative">
-        {heritage.imageUrl ? (
-          <img
-            src={heritage.imageUrl}
-            alt={heritage.nameJa}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-4xl text-gray-300">
-            {heritage.category === "Natural" ? "🌿" : heritage.category === "Mixed" ? "🌍" : "🏛️"}
-          </div>
-        )}
+    <div className="card overflow-hidden">
+      <div className="h-40 relative">
+        <HeritageImage
+          imageUrl={heritage.imageUrl}
+          nameEn={heritage.nameEn}
+          nameJa={heritage.nameJa}
+          category={heritage.category}
+          className="w-full h-full"
+        />
         <span
-          className={`absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-semibold ${categoryColor}`}
+          className={`absolute top-2 left-2 px-2 py-0.5 rounded-lg text-xs font-semibold backdrop-blur-sm ${categoryColor}`}
         >
           {categoryLabel}
         </span>
-        <span className="absolute top-2 right-2 bg-white/90 px-2 py-0.5 rounded text-xs">
+        <span className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-lg text-xs text-amber-500">
           {"★".repeat(heritage.examImportance)}
         </span>
       </div>
@@ -46,7 +42,7 @@ export function HeritageCard({ heritage }: { heritage: Heritage }) {
       <div className="p-3 space-y-2">
         <Link
           href={`/heritage/${heritage.id}`}
-          className="block font-bold text-sm hover:text-[var(--primary)]"
+          className="block font-bold text-sm hover:text-[var(--primary)] transition-colors"
         >
           {heritage.nameJa}
         </Link>

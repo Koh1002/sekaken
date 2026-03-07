@@ -129,7 +129,7 @@ export default function QuizPage() {
           <button
             onClick={startQuiz}
             disabled={loading}
-            className="w-full bg-[var(--primary)] text-white py-3 rounded-lg font-semibold hover:opacity-90 disabled:opacity-50"
+            className="w-full btn-primary py-3 text-center disabled:opacity-50"
           >
             {loading ? "読込中..." : "クイズ開始"}
           </button>
@@ -148,18 +148,21 @@ export default function QuizPage() {
       <div className="max-w-lg mx-auto space-y-6">
         <h1 className="text-2xl font-bold">結果</h1>
 
-        <div className="text-center py-8 bg-[var(--card-bg)] rounded-xl">
-          <p className="text-5xl font-bold mb-2">
+        <div className="card text-center py-8 px-4">
+          <p className="text-5xl font-bold mb-2" style={{ color: rate >= 80 ? "var(--success)" : rate >= 60 ? "var(--accent-dark)" : "var(--danger)" }}>
             {correct} / {total}
           </p>
-          <p className="text-lg text-[var(--muted)]">正答率 {rate}%</p>
-          <div className="mt-4">
+          <div className="progress-bar mt-4 mx-auto max-w-xs">
+            <div className="progress-bar-fill" style={{ width: `${rate}%`, background: rate >= 80 ? "var(--success)" : rate >= 60 ? "var(--warning)" : "var(--danger)" }} />
+          </div>
+          <p className="text-lg text-[var(--muted)] mt-3">正答率 {rate}%</p>
+          <div className="mt-2">
             {rate >= 80 ? (
-              <p className="text-green-600 font-bold">素晴らしい！</p>
+              <p className="font-bold" style={{ color: "var(--success)" }}>素晴らしい！</p>
             ) : rate >= 60 ? (
-              <p className="text-amber-600 font-bold">もう少し！</p>
+              <p className="font-bold" style={{ color: "var(--accent-dark)" }}>もう少し！</p>
             ) : (
-              <p className="text-red-600 font-bold">復習しましょう</p>
+              <p className="font-bold" style={{ color: "var(--danger)" }}>復習しましょう</p>
             )}
           </div>
         </div>
@@ -193,13 +196,13 @@ export default function QuizPage() {
               setState("setup");
               setSelected(null);
             }}
-            className="flex-1 bg-[var(--primary)] text-white py-3 rounded-lg font-semibold hover:opacity-90"
+            className="flex-1 btn-primary py-3 text-center"
           >
             もう一度
           </button>
           <button
             onClick={() => (window.location.href = "/review")}
-            className="flex-1 bg-amber-500 text-white py-3 rounded-lg font-semibold hover:opacity-90"
+            className="flex-1 py-3 rounded-xl font-semibold border-2 border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all text-center"
           >
             復習する
           </button>
@@ -209,7 +212,8 @@ export default function QuizPage() {
                 const wrongIds = wrongResults.map((r) => r.heritageId).join(",");
                 window.location.href = `/quiz?ids=${wrongIds}`;
               }}
-              className="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:opacity-90"
+              className="w-full py-3 rounded-xl font-semibold text-white text-center"
+              style={{ background: "var(--danger)" }}
             >
               間違えた問題だけ復習 ({wrongResults.length}問)
             </button>
@@ -232,9 +236,9 @@ export default function QuizPage() {
         </span>
       </div>
 
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="progress-bar">
         <div
-          className="bg-[var(--primary)] h-2 rounded-full transition-all"
+          className="progress-bar-fill"
           style={{
             width: `${((currentQ + 1) / questions.length) * 100}%`,
           }}
@@ -251,18 +255,18 @@ export default function QuizPage() {
         </div>
       )}
 
-      <div className="bg-[var(--card-bg)] rounded-xl p-4">
+      <div className="card p-4">
         <p className="text-lg font-medium">{q.question}</p>
       </div>
 
       <div className="space-y-2">
         {q.options.map((option, idx) => {
-          let btnColor = "border-[var(--border)] hover:bg-gray-50";
+          let btnStyle = "border-[var(--border)] hover:border-[var(--primary)]";
           if (selected !== null) {
             if (idx === q.correctIndex) {
-              btnColor = "border-green-500 bg-green-50 text-green-700";
+              btnStyle = "border-[var(--success)] bg-[var(--success)]/10 text-[var(--success)]";
             } else if (idx === selected && idx !== q.correctIndex) {
-              btnColor = "border-red-500 bg-red-50 text-red-700";
+              btnStyle = "border-[var(--danger)] bg-[var(--danger)]/10 text-[var(--danger)]";
             }
           }
 
@@ -271,7 +275,7 @@ export default function QuizPage() {
               key={idx}
               onClick={() => handleAnswer(idx)}
               disabled={selected !== null}
-              className={`w-full text-left p-3 rounded-lg border ${btnColor} transition-colors`}
+              className={`w-full text-left p-3.5 rounded-xl border-2 font-medium ${btnStyle} transition-all`}
             >
               {option}
             </button>
@@ -282,7 +286,7 @@ export default function QuizPage() {
       {selected !== null && (
         <button
           onClick={nextQuestion}
-          className="w-full bg-[var(--primary)] text-white py-3 rounded-lg font-semibold hover:opacity-90"
+          className="w-full btn-primary py-3 text-center"
         >
           {currentQ + 1 >= questions.length ? "結果を見る" : "次の問題"}
         </button>

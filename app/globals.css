@@ -1,38 +1,98 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #2563eb;
-  --primary-light: #3b82f6;
-  --accent: #f59e0b;
-  --success: #10b981;
-  --danger: #ef4444;
-  --muted: #6b7280;
-  --card-bg: #f9fafb;
-  --border: #e5e7eb;
+  --background: #f5f7fa;
+  --foreground: #1a1a2e;
+  --primary: #00b894;
+  --primary-light: #55efc4;
+  --primary-dark: #00a381;
+  --accent: #fdcb6e;
+  --accent-dark: #f39c12;
+  --success: #00b894;
+  --warning: #fdcb6e;
+  --danger: #e17055;
+  --muted: #8395a7;
+  --card-bg: #ffffff;
+  --border: #e8ecf1;
+  --memorized: #00b894;
+  --in-progress: #fdcb6e;
+  --weak: #e17055;
+  --unknown: #dfe6e9;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --card-bg: #1a1a1a;
-    --border: #333333;
+    --background: #0d1117;
+    --foreground: #e6edf3;
+    --primary: #00d2a0;
+    --primary-light: #55efc4;
+    --primary-dark: #00b894;
+    --card-bg: #161b22;
+    --border: #30363d;
+    --muted: #8b949e;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", -apple-system, sans-serif;
   -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ボタン共通 */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 184, 148, 0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 184, 148, 0.4);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* カード共通 */
+.card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* 進捗バー */
+.progress-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--unknown);
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  transition: width 0.5s ease;
 }
 
 /* タッチデバイス向け */
 @media (hover: none) {
   button, a {
     -webkit-tap-highlight-color: transparent;
+  }
+  .card:hover {
+    transform: none;
+    box-shadow: none;
   }
 }
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Heritage } from "@/lib/types";
 import { StudyButtons } from "./StudyButtons";
+import { HeritageImage } from "./HeritageImage";
 
 const DetailMap = dynamic(() => import("./DetailMap"), { ssr: false });
 
@@ -24,20 +25,20 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
         ← 一覧に戻る
       </Link>
 
-      {heritage.imageUrl && (
-        <div className="rounded-xl overflow-hidden">
-          <img
-            src={heritage.imageUrl}
-            alt={heritage.nameJa}
-            className="w-full h-64 object-cover"
-          />
-          {heritage.imageAttribution && (
-            <p className="text-xs text-[var(--muted)] p-2 bg-gray-50">
-              📷 {heritage.imageAttribution}
-            </p>
-          )}
-        </div>
-      )}
+      <div className="rounded-2xl overflow-hidden">
+        <HeritageImage
+          imageUrl={heritage.imageUrl}
+          nameEn={heritage.nameEn}
+          nameJa={heritage.nameJa}
+          category={heritage.category}
+          className="w-full h-64"
+        />
+        {heritage.imageAttribution && (
+          <p className="text-xs text-[var(--muted)] p-2 bg-[var(--card-bg)]">
+            📷 {heritage.imageAttribution}
+          </p>
+        )}
+      </div>
 
       <div>
         <h1 className="text-2xl font-bold">{heritage.nameJa}</h1>
@@ -59,15 +60,15 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
       </div>
 
       {heritage.shortDescJa && (
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-          <h2 className="font-bold text-sm mb-1">概要</h2>
+        <div className="card p-4" style={{ borderColor: "var(--primary)", borderWidth: "1px" }}>
+          <h2 className="font-bold text-sm mb-1" style={{ color: "var(--primary)" }}>概要</h2>
           <p className="text-sm">{heritage.shortDescJa}</p>
         </div>
       )}
 
       {heritage.memoryTipJa && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-          <h2 className="font-bold text-sm mb-1">覚え方のポイント</h2>
+        <div className="card p-4" style={{ borderColor: "var(--accent)", borderWidth: "1px" }}>
+          <h2 className="font-bold text-sm mb-1" style={{ color: "var(--accent-dark)" }}>覚え方のポイント</h2>
           <p className="text-sm">{heritage.memoryTipJa}</p>
         </div>
       )}
@@ -122,13 +123,13 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
       <div className="flex gap-2">
         <Link
           href={`/quiz?ids=${heritage.id}`}
-          className="bg-[var(--primary)] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90"
+          className="btn-primary text-sm text-center"
         >
           この遺産でクイズ
         </Link>
         <Link
           href={`/photo?id=${heritage.id}`}
-          className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90"
+          className="px-4 py-3 rounded-xl text-sm font-semibold border border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all text-center"
         >
           写真で学ぶ
         </Link>
@@ -139,7 +140,7 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
 
 function InfoItem({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-[var(--card-bg)] rounded-lg p-3">
+    <div className="card p-3">
       <p className="text-xs text-[var(--muted)]">{label}</p>
       <p className="font-semibold">{value}</p>
     </div>

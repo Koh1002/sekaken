@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Heritage } from "@/lib/types";
 import { StudyButtons } from "@/components/StudyButtons";
+import { HeritageImage } from "@/components/HeritageImage";
 
 export default function PhotoPage() {
   const [heritages, setHeritages] = useState<Heritage[]>([]);
@@ -14,8 +15,7 @@ export default function PhotoPage() {
     fetch("/api/heritages")
       .then((res) => res.json())
       .then((data: Heritage[]) => {
-        const withImages = data.filter((h) => h.imageUrl);
-        const shuffled = withImages.sort(() => Math.random() - 0.5);
+        const shuffled = data.sort(() => Math.random() - 0.5);
         setHeritages(shuffled);
         setLoading(false);
       });
@@ -30,7 +30,7 @@ export default function PhotoPage() {
   if (heritages.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-[var(--muted)]">画像付きの遺産データがありません</p>
+        <p className="text-[var(--muted)]">遺産データがありません</p>
       </div>
     );
   }
@@ -51,20 +51,26 @@ export default function PhotoPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-4">
-      <h1 className="text-2xl font-bold">写真で学ぶ</h1>
-      <p className="text-sm text-[var(--muted)]">
-        {current + 1} / {heritages.length}
-      </p>
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold">写真で学ぶ</h1>
+        <span className="text-sm text-[var(--muted)] px-3 py-1 rounded-full" style={{ background: "rgba(0,184,148,0.1)", color: "var(--primary)" }}>
+          {current + 1} / {heritages.length}
+        </span>
+      </div>
 
-      <div className="bg-white rounded-xl border border-[var(--border)] overflow-hidden">
-        <div className="h-72 bg-gray-100">
-          {h.imageUrl && (
-            <img
-              src={h.imageUrl}
-              alt={showAnswer ? h.nameJa : "世界遺産の写真"}
-              className="w-full h-full object-cover"
-            />
-          )}
+      <div className="progress-bar">
+        <div className="progress-bar-fill" style={{ width: `${((current + 1) / heritages.length) * 100}%` }} />
+      </div>
+
+      <div className="card overflow-hidden">
+        <div className="h-72">
+          <HeritageImage
+            imageUrl={h.imageUrl}
+            nameEn={h.nameEn}
+            nameJa={showAnswer ? h.nameJa : "世界遺産の写真"}
+            category={h.category}
+            className="w-full h-full"
+          />
         </div>
 
         <div className="p-4 space-y-3">
@@ -84,7 +90,7 @@ export default function PhotoPage() {
                 <p className="text-sm text-[var(--muted)]">{h.shortDescJa}</p>
               )}
               {h.memoryTipJa && (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <div className="card p-3" style={{ borderColor: "var(--accent)" }}>
                   <p className="text-sm">💡 {h.memoryTipJa}</p>
                 </div>
               )}
@@ -100,10 +106,10 @@ export default function PhotoPage() {
         </div>
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-2">
         <button
           onClick={prev}
-          className="px-4 py-2 border border-[var(--border)] rounded-lg text-sm hover:bg-gray-50"
+          className="px-4 py-2.5 rounded-xl text-sm font-medium border border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all"
         >
           ← 前へ
         </button>
@@ -111,14 +117,14 @@ export default function PhotoPage() {
         {!showAnswer ? (
           <button
             onClick={() => setShowAnswer(true)}
-            className="px-6 py-2 bg-[var(--primary)] text-white rounded-lg text-sm font-semibold hover:opacity-90"
+            className="btn-primary text-sm flex-1 text-center"
           >
             答えを見る
           </button>
         ) : (
           <button
             onClick={next}
-            className="px-6 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:opacity-90"
+            className="btn-primary text-sm flex-1 text-center"
           >
             次へ →
           </button>
@@ -126,9 +132,9 @@ export default function PhotoPage() {
 
         <button
           onClick={next}
-          className="px-4 py-2 border border-[var(--border)] rounded-lg text-sm hover:bg-gray-50"
+          className="px-4 py-2.5 rounded-xl text-sm font-medium border border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all"
         >
-          スキップ →
+          スキップ
         </button>
       </div>
     </div>

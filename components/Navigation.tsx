@@ -9,7 +9,7 @@ const navItems = [
   { href: "/heritage", label: "一覧", icon: "📋" },
   { href: "/map", label: "地図", icon: "🗺️" },
   { href: "/photo", label: "写真", icon: "📷" },
-  { href: "/quiz", label: "クイズ", icon: "❓" },
+  { href: "/quiz", label: "クイズ", icon: "✏️" },
   { href: "/review", label: "復習", icon: "🔄" },
   { href: "/dashboard", label: "進捗", icon: "📊" },
 ];
@@ -21,36 +21,35 @@ export function Navigation() {
   return (
     <>
       {/* Desktop header */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[var(--border)] hidden sm:block">
+      <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-[var(--border)] hidden sm:block shadow-sm" style={{ background: "rgba(255,255,255,0.92)" }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-14">
-            <Link href="/" className="font-bold text-lg text-[var(--primary)]">
-              世界遺産検定2級
+            <Link href="/" className="font-bold text-lg flex items-center gap-2">
+              <span className="text-xl">🌍</span>
+              <span style={{ color: "var(--primary)" }}>セカケン</span>
             </Link>
             <div className="flex gap-1 items-center">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm whitespace-nowrap transition-all ${
                     pathname === item.href
-                      ? "bg-blue-100 text-[var(--primary)] font-semibold"
-                      : "text-[var(--muted)] hover:bg-gray-100"
+                      ? "font-semibold"
+                      : "text-[var(--muted)] hover:text-[var(--foreground)]"
                   }`}
+                  style={pathname === item.href ? { background: "rgba(0,184,148,0.12)", color: "var(--primary)" } : {}}
                 >
-                  <span>{item.icon}</span>
+                  <span className="text-base">{item.icon}</span>
                   <span>{item.label}</span>
                 </Link>
               ))}
               <Link
                 href="/auth"
-                className={`ml-2 flex items-center gap-1 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
-                  pathname === "/auth"
-                    ? "bg-blue-100 text-[var(--primary)] font-semibold"
-                    : user
-                    ? "bg-green-50 text-green-700 border border-green-200"
-                    : "text-[var(--muted)] hover:bg-gray-100 border border-[var(--border)]"
+                className={`ml-2 flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm whitespace-nowrap transition-all border ${
+                  user ? "border-[var(--primary)]" : "border-[var(--border)] text-[var(--muted)]"
                 }`}
+                style={user ? { background: "rgba(0,184,148,0.1)", color: "var(--primary)" } : {}}
               >
                 <span>{user ? "👤" : "🔑"}</span>
                 <span>{user ? "マイページ" : "ログイン"}</span>
@@ -61,16 +60,16 @@ export function Navigation() {
       </nav>
 
       {/* Mobile header */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[var(--border)] sm:hidden">
+      <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-[var(--border)] sm:hidden shadow-sm" style={{ background: "rgba(255,255,255,0.92)" }}>
         <div className="flex items-center justify-between h-12 px-3">
-          <Link href="/" className="font-bold text-base text-[var(--primary)]">
-            世界遺産検定2級
+          <Link href="/" className="font-bold text-base flex items-center gap-1.5">
+            <span>🌍</span>
+            <span style={{ color: "var(--primary)" }}>セカケン</span>
           </Link>
           <Link
             href="/auth"
-            className={`p-2 rounded-lg text-sm ${
-              user ? "text-green-700" : "text-[var(--muted)]"
-            }`}
+            className="p-2 rounded-xl text-sm"
+            style={{ color: user ? "var(--primary)" : "var(--muted)" }}
           >
             {user ? "👤" : "🔑"}
           </Link>
@@ -78,20 +77,21 @@ export function Navigation() {
       </nav>
 
       {/* Mobile bottom tab bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-[var(--border)] sm:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-md border-t border-[var(--border)] sm:hidden" style={{ background: "rgba(255,255,255,0.95)" }}>
         <div className="flex justify-around items-center h-14 px-1 pb-[env(safe-area-inset-bottom)]">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center flex-1 py-1 ${
-                pathname === item.href
-                  ? "text-[var(--primary)]"
-                  : "text-[var(--muted)]"
-              }`}
+              className="flex flex-col items-center justify-center flex-1 py-1 rounded-lg transition-colors"
+              style={{ color: pathname === item.href ? "var(--primary)" : "var(--muted)" }}
             >
-              <span className="text-lg leading-none">{item.icon}</span>
-              <span className="text-[10px] mt-0.5 leading-none">{item.label}</span>
+              <span className={`text-lg leading-none transition-transform ${pathname === item.href ? "scale-110" : ""}`}>
+                {item.icon}
+              </span>
+              <span className={`text-[10px] mt-0.5 leading-none ${pathname === item.href ? "font-semibold" : ""}`}>
+                {item.label}
+              </span>
             </Link>
           ))}
         </div>

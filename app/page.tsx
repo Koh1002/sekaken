@@ -14,83 +14,96 @@ export default async function HomePage() {
 
   const features = [
     {
+      href: "/quiz",
+      icon: "✏️",
+      title: "クイズ",
+      desc: "4択問題で知識をテスト",
+      gradient: "from-emerald-400 to-teal-500",
+    },
+    {
       href: "/heritage",
       icon: "📋",
       title: "遺産一覧",
-      desc: "世界遺産を一覧で閲覧・検索",
-      color: "bg-blue-50 border-blue-200",
-    },
-    {
-      href: "/map",
-      icon: "🗺️",
-      title: "地図で学ぶ",
-      desc: "世界地図上で遺産の位置を確認",
-      color: "bg-green-50 border-green-200",
+      desc: "世界遺産を閲覧・検索",
+      gradient: "from-blue-400 to-indigo-500",
     },
     {
       href: "/photo",
       icon: "📷",
       title: "写真で学ぶ",
       desc: "フラッシュカードで写真学習",
-      color: "bg-purple-50 border-purple-200",
+      gradient: "from-purple-400 to-pink-500",
     },
     {
-      href: "/quiz",
-      icon: "❓",
-      title: "クイズ",
-      desc: "4択問題で知識をテスト",
-      color: "bg-amber-50 border-amber-200",
+      href: "/map",
+      icon: "🗺️",
+      title: "地図で学ぶ",
+      desc: "世界地図で遺産の位置を確認",
+      gradient: "from-cyan-400 to-blue-500",
     },
     {
       href: "/review",
       icon: "🔄",
       title: "復習する",
       desc: "苦手・間違えた遺産を復習",
-      color: "bg-red-50 border-red-200",
+      gradient: "from-amber-400 to-orange-500",
     },
     {
       href: "/dashboard",
       icon: "📊",
       title: "学習進捗",
       desc: "学習状況をダッシュボードで確認",
-      color: "bg-indigo-50 border-indigo-200",
+      gradient: "from-rose-400 to-red-500",
     },
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="text-center py-8">
-        <h1 className="text-3xl font-bold mb-2">世界遺産検定2級 学習アプリ</h1>
-        <p className="text-[var(--muted)]">
-          {totalCount}件の世界遺産データ（日本{japanCount}件を含む）で学習
+    <div className="space-y-6">
+      {/* Hero */}
+      <div className="text-center py-8 px-4 rounded-2xl" style={{ background: "linear-gradient(135deg, var(--primary), var(--primary-dark))" }}>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+          🌍 世界遺産検定2級
+        </h1>
+        <p className="text-white/80 text-sm sm:text-base">
+          {totalCount}件の世界遺産（日本{japanCount}件）で学習しよう
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Feature Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
         {features.map((f) => (
           <Link
             key={f.href}
             href={f.href}
-            className={`block p-6 rounded-xl border ${f.color} hover:shadow-md transition-shadow`}
+            className="card p-4 sm:p-5 flex flex-col items-start gap-2 group"
           >
-            <div className="text-3xl mb-3">{f.icon}</div>
-            <h2 className="text-lg font-bold mb-1">{f.title}</h2>
-            <p className="text-sm text-[var(--muted)]">{f.desc}</p>
+            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${f.gradient} flex items-center justify-center text-xl sm:text-2xl text-white shadow-sm`}>
+              {f.icon}
+            </div>
+            <div>
+              <h2 className="font-bold text-sm sm:text-base group-hover:text-[var(--primary)] transition-colors">{f.title}</h2>
+              <p className="text-xs text-[var(--muted)] mt-0.5 hidden sm:block">{f.desc}</p>
+            </div>
           </Link>
         ))}
       </div>
 
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
-        <h2 className="font-bold text-lg mb-2">📝 今日のおすすめ復習</h2>
-        <p className="text-sm text-[var(--muted)] mb-3">
-          苦手な遺産や間違えた問題を効率的に復習しましょう
-        </p>
-        <Link
-          href="/review"
-          className="inline-block bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-600 transition-colors"
-        >
-          復習を始める
-        </Link>
+      {/* Quick Start */}
+      <div className="card p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ borderColor: "var(--primary)", borderWidth: "1px" }}>
+        <div className="flex-1">
+          <h2 className="font-bold text-base mb-1">今すぐ学習を始めよう</h2>
+          <p className="text-sm text-[var(--muted)]">
+            苦手な遺産や間違えた問題を効率的に復習しましょう
+          </p>
+        </div>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Link href="/quiz" className="btn-primary text-center text-sm flex-1 sm:flex-none">
+            クイズ開始
+          </Link>
+          <Link href="/review" className="text-center text-sm flex-1 sm:flex-none px-4 py-3 rounded-xl font-semibold border border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all">
+            復習する
+          </Link>
+        </div>
       </div>
 
       <div className="text-center text-xs text-[var(--muted)] py-4">
