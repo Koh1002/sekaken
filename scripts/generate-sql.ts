@@ -24,7 +24,7 @@ console.log(`CREATE TABLE IF NOT EXISTS heritages (
   inscription_year INTEGER NOT NULL,
   latitude DOUBLE PRECISION NOT NULL,
   longitude DOUBLE PRECISION NOT NULL,
-  short_desc_ja TEXT,
+  short_description_ja TEXT,
   memory_tip_ja TEXT,
   tags TEXT,
   unesco_criteria TEXT,
@@ -42,7 +42,7 @@ console.log("");
 console.log("-- Insert all heritage data");
 
 for (const h of allHeritages) {
-  console.log(`INSERT INTO heritages (id, name_ja, name_en, country_ja, country_en, region, category, inscription_year, latitude, longitude, short_desc_ja, memory_tip_ja, tags, unesco_criteria, official_url, unesco_url, source_urls, image_url, image_attribution, exam_importance) VALUES (${h.id}, ${escapeSQL(h.nameJa)}, ${escapeSQL(h.nameEn)}, ${escapeSQL(h.countryJa)}, ${escapeSQL(h.countryEn)}, ${escapeSQL(h.region)}, ${escapeSQL(h.category)}, ${h.inscriptionYear}, ${h.latitude}, ${h.longitude}, ${escapeSQL(h.shortDescJa)}, ${escapeSQL(h.memoryTipJa)}, ${escapeSQL(h.tags)}, ${escapeSQL(h.unescoCriteria)}, ${escapeSQL(h.officialUrl)}, ${escapeSQL(h.unescoUrl)}, ${escapeSQL(h.sourceUrls)}, ${escapeSQL(h.imageUrl)}, ${escapeSQL(h.imageAttribution)}, ${h.examImportance});`);
+  console.log(`INSERT INTO heritages (id, name_ja, name_en, country_ja, country_en, region, category, inscription_year, latitude, longitude, short_description_ja, memory_tip_ja, tags, unesco_criteria, official_url, unesco_url, source_urls, image_url, image_attribution, exam_importance) VALUES (${h.id}, ${escapeSQL(h.nameJa)}, ${escapeSQL(h.nameEn)}, ${escapeSQL(h.countryJa)}, ${escapeSQL(h.countryEn)}, ${escapeSQL(h.region)}, ${escapeSQL(h.category)}, ${h.inscriptionYear}, ${h.latitude}, ${h.longitude}, ${escapeSQL(h.shortDescJa)}, ${escapeSQL(h.memoryTipJa)}, ${escapeSQL(h.tags)}, ${escapeSQL(h.unescoCriteria)}, ${escapeSQL(h.officialUrl)}, ${escapeSQL(h.unescoUrl)}, ${escapeSQL(h.sourceUrls)}, ${escapeSQL(h.imageUrl)}, ${escapeSQL(h.imageAttribution)}, ${h.examImportance});`);
 }
 
 console.log("");
