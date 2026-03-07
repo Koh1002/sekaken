@@ -46,7 +46,7 @@ export const japanHeritages = [
     examImportance: 5
   },
   {
-    id: 688,
+    id: 662,
     nameJa: "屋久島",
     nameEn: "Yakushima",
     countryJa: "日本",
