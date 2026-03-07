@@ -1,5 +1,5 @@
 -- World Heritage data seed for Supabase
--- Generated: 2026-03-07T15:27:41.865Z
+-- Generated: 2026-03-07T15:32:57.271Z
 -- Total entries: 301
 
 -- Create table if not exists
