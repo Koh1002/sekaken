@@ -18,16 +18,20 @@ export default function AuthPage() {
     return (
       <div className="max-w-md mx-auto space-y-6 py-8">
         <div className="text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">👤</span>
+          <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
+            style={{ background: "rgba(34,197,94,0.1)", color: "var(--success)" }}>
+            <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
           </div>
-          <h1 className="text-xl font-bold mb-1">ログイン中</h1>
+          <h1 className="text-lg font-bold mb-1">ログイン中</h1>
           <p className="text-sm text-[var(--muted)]">{user.email}</p>
         </div>
 
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-sm">
-          <p className="font-semibold text-green-700 mb-1">学習データはクラウドに同期中</p>
-          <p className="text-green-600">
+        <div className="card p-4 text-sm" style={{ borderColor: "rgba(34,197,94,0.3)" }}>
+          <p className="font-semibold mb-1" style={{ color: "var(--success)" }}>学習データはクラウドに同期中</p>
+          <p className="text-[var(--muted)]">
             別のデバイスからも同じアカウントでログインすれば学習記録が引き継がれます。
           </p>
         </div>
@@ -37,7 +41,8 @@ export default function AuthPage() {
             await signOut();
             router.push("/");
           }}
-          className="w-full border border-red-300 text-red-600 py-3 rounded-lg font-semibold hover:bg-red-50 transition-colors"
+          className="w-full py-3 rounded-xl font-semibold border transition-colors"
+          style={{ borderColor: "rgba(239,68,68,0.3)", color: "var(--danger)" }}
         >
           ログアウト
         </button>
@@ -72,7 +77,7 @@ export default function AuthPage() {
   return (
     <div className="max-w-md mx-auto space-y-6 py-8">
       <div className="text-center">
-        <h1 className="text-2xl font-bold mb-2">
+        <h1 className="text-xl font-bold mb-2">
           {mode === "login" ? "ログイン" : "アカウント作成"}
         </h1>
         <p className="text-sm text-[var(--muted)]">
@@ -81,38 +86,38 @@ export default function AuthPage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="card p-5 space-y-4">
         <div>
-          <label className="block text-sm font-semibold mb-1">メールアドレス</label>
+          <label className="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider mb-2">メールアドレス</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full border border-[var(--border)] rounded-lg px-3 py-2.5 text-base"
+            className="form-input"
             placeholder="email@example.com"
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold mb-1">パスワード</label>
+          <label className="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider mb-2">パスワード</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full border border-[var(--border)] rounded-lg px-3 py-2.5 text-base"
+            className="form-input"
             placeholder="6文字以上"
           />
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">
+          <div className="rounded-xl p-3 text-sm" style={{ background: "rgba(239,68,68,0.06)", color: "var(--danger)", border: "1px solid rgba(239,68,68,0.2)" }}>
             {error}
           </div>
         )}
         {success && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-600">
+          <div className="rounded-xl p-3 text-sm" style={{ background: "rgba(34,197,94,0.06)", color: "var(--success)", border: "1px solid rgba(34,197,94,0.2)" }}>
             {success}
           </div>
         )}
@@ -120,7 +125,7 @@ export default function AuthPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[var(--primary)] text-white py-3 rounded-lg font-semibold hover:opacity-90 disabled:opacity-50 text-base"
+          className="w-full btn-primary py-3 text-center disabled:opacity-50"
         >
           {loading ? "処理中..." : mode === "login" ? "ログイン" : "アカウント作成"}
         </button>
@@ -133,7 +138,8 @@ export default function AuthPage() {
             setError(null);
             setSuccess(null);
           }}
-          className="text-sm text-[var(--primary)] hover:underline"
+          className="text-sm hover:underline"
+          style={{ color: "var(--primary)" }}
         >
           {mode === "login"
             ? "アカウントをお持ちでない方はこちら"
@@ -141,9 +147,9 @@ export default function AuthPage() {
         </button>
       </div>
 
-      <div className="bg-gray-50 border border-[var(--border)] rounded-xl p-4 text-sm text-[var(--muted)]">
-        <p className="font-semibold text-[var(--foreground)] mb-1">ログインしなくても使えます</p>
-        <p>
+      <div className="card p-4 text-sm">
+        <p className="font-semibold mb-1">ログインしなくても使えます</p>
+        <p className="text-[var(--muted)]">
           ログインなしでもアプリは利用可能です。その場合、学習データはこのブラウザにのみ保存されます。
         </p>
       </div>

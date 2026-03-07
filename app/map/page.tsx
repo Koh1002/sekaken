@@ -28,25 +28,17 @@ export default function MapPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">地図で学ぶ</h1>
+      <h1 className="page-header">地図で学ぶ</h1>
 
       <div className="flex flex-wrap gap-2">
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="border border-[var(--border)] rounded-lg px-3 py-2 text-sm"
-        >
+        <select value={category} onChange={(e) => setCategory(e.target.value)} className="form-input w-auto">
           <option value="all">全カテゴリ</option>
           <option value="Cultural">文化遺産</option>
           <option value="Natural">自然遺産</option>
           <option value="Mixed">複合遺産</option>
         </select>
 
-        <select
-          value={region}
-          onChange={(e) => setRegion(e.target.value)}
-          className="border border-[var(--border)] rounded-lg px-3 py-2 text-sm"
-        >
+        <select value={region} onChange={(e) => setRegion(e.target.value)} className="form-input w-auto">
           <option value="all">全地域</option>
           <option value="japan">日本</option>
           <option value="asia">アジア太平洋</option>
@@ -61,7 +53,7 @@ export default function MapPage() {
         </span>
       </div>
 
-      <div className="rounded-xl overflow-hidden border border-[var(--border)]" style={{ height: "70vh" }}>
+      <div className="card overflow-hidden" style={{ height: "70vh" }}>
         {loading ? (
           <div className="h-full flex items-center justify-center text-[var(--muted)]">
             読込中...

@@ -25,7 +25,8 @@ export default function RootLayout({
       <body className="min-h-screen bg-[var(--background)]">
         <AuthProvider>
           <Navigation />
-          <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 pb-20 sm:pb-6">
+          {/* Desktop: offset by sidebar width. Mobile: normal flow */}
+          <main className="md:ml-[220px] px-4 md:px-8 py-5 md:py-8 pb-24 md:pb-8 max-w-6xl">
             {children}
           </main>
         </AuthProvider>

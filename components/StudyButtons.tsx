@@ -26,50 +26,53 @@ export function StudyButtons({
 
   const refresh = () => setRecord(getRecord(heritageId));
 
-  const btnClass = compact
-    ? "px-2 py-1 rounded text-xs border transition-colors"
-    : "px-3 py-1.5 rounded-lg text-sm border transition-colors";
+  const btnBase = compact
+    ? "px-2.5 py-1 rounded-lg text-xs font-medium border transition-all"
+    : "px-3 py-1.5 rounded-lg text-sm font-medium border transition-all";
 
   return (
-    <div className="flex flex-wrap gap-1">
+    <div className="flex flex-wrap gap-1.5">
       <button
         onClick={() => {
           toggleManualReview(heritageId);
           refresh();
         }}
-        className={`${btnClass} ${
+        className={btnBase}
+        style={
           record.isManualReview
-            ? "bg-amber-100 border-amber-300 text-amber-700"
-            : "border-gray-200 text-gray-500 hover:bg-amber-50"
-        }`}
+            ? { background: "rgba(245,158,66,0.1)", borderColor: "rgba(245,158,66,0.3)", color: "#d97b06" }
+            : { borderColor: "var(--border)", color: "var(--muted)" }
+        }
       >
-        {record.isManualReview ? "🔄 復習中" : "🔄 復習"}
+        {record.isManualReview ? "↻ 復習中" : "↻ 復習"}
       </button>
       <button
         onClick={() => {
           toggleWeak(heritageId);
           refresh();
         }}
-        className={`${btnClass} ${
+        className={btnBase}
+        style={
           record.isWeak
-            ? "bg-red-100 border-red-300 text-red-700"
-            : "border-gray-200 text-gray-500 hover:bg-red-50"
-        }`}
+            ? { background: "rgba(239,68,68,0.1)", borderColor: "rgba(239,68,68,0.3)", color: "var(--danger)" }
+            : { borderColor: "var(--border)", color: "var(--muted)" }
+        }
       >
-        {record.isWeak ? "😰 苦手" : "😰 苦手"}
+        {record.isWeak ? "! 苦手" : "! 苦手"}
       </button>
       <button
         onClick={() => {
           toggleLearned(heritageId);
           refresh();
         }}
-        className={`${btnClass} ${
+        className={btnBase}
+        style={
           record.isLearned
-            ? "bg-green-100 border-green-300 text-green-700"
-            : "border-gray-200 text-gray-500 hover:bg-green-50"
-        }`}
+            ? { background: "rgba(34,197,94,0.1)", borderColor: "rgba(34,197,94,0.3)", color: "var(--success)" }
+            : { borderColor: "var(--border)", color: "var(--muted)" }
+        }
       >
-        {record.isLearned ? "✅ 覚えた" : "✅ 覚えた"}
+        {record.isLearned ? "✓ 覚えた" : "✓ 覚えた"}
       </button>
     </div>
   );

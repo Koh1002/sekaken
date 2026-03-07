@@ -95,34 +95,34 @@ export default function DashboardPage() {
       : 0;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">学習ダッシュボード</h1>
+    <div className="max-w-4xl space-y-6">
+      <h1 className="page-header">学習ダッシュボード</h1>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <StatCard label="総遺産数" value={stats.total} />
-        <StatCard label="学習済み" value={stats.studied} />
-        <StatCard label="覚えた" value={stats.learned} color="green" />
-        <StatCard label="苦手" value={stats.weak} color="red" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <StatCard label="総遺産数" value={stats.total} icon="📊" />
+        <StatCard label="学習済み" value={stats.studied} icon="📚" />
+        <StatCard label="覚えた" value={stats.learned} color="var(--success)" icon="✓" />
+        <StatCard label="苦手" value={stats.weak} color="var(--danger)" icon="!" />
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <StatCard label="復習対象" value={stats.reviewCount} color="amber" />
-        <StatCard label="正答率" value={`${rate}%`} />
-        <StatCard
-          label="解答数"
-          value={stats.totalCorrect + stats.totalWrong}
-        />
+      <div className="grid grid-cols-3 gap-3">
+        <StatCard label="復習対象" value={stats.reviewCount} color="var(--warning)" icon="↻" />
+        <StatCard label="正答率" value={`${rate}%`} icon="%" />
+        <StatCard label="解答数" value={stats.totalCorrect + stats.totalWrong} icon="#" />
       </div>
 
       {stats.recommended.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-3">
-          <h2 className="font-bold">今日のおすすめ復習</h2>
-          <div className="space-y-2">
+        <div className="card p-5 space-y-3" style={{ borderColor: "rgba(245,158,66,0.3)" }}>
+          <h2 className="font-semibold text-sm flex items-center gap-2">
+            <span className="w-6 h-6 rounded-md flex items-center justify-center text-xs" style={{ background: "rgba(245,158,66,0.12)", color: "var(--warning)" }}>★</span>
+            今日のおすすめ復習
+          </h2>
+          <div className="space-y-1.5">
             {stats.recommended.slice(0, 5).map((item) => (
               <Link
                 key={item.id}
                 href={`/heritage/${item.id}`}
-                className="block bg-white rounded-lg p-2 text-sm hover:bg-amber-50 border border-amber-100"
+                className="block rounded-xl p-3 text-sm hover:bg-[var(--background)] transition-colors border border-[var(--border)]"
               >
                 <span className="font-medium">{item.name}</span>
                 <span className="text-xs text-[var(--muted)] ml-2">
@@ -131,27 +131,27 @@ export default function DashboardPage() {
               </Link>
             ))}
           </div>
-          <Link
-            href="/review"
-            className="inline-block bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-semibold"
-          >
+          <Link href="/review" className="btn-primary inline-block text-sm">
             復習を始める
           </Link>
         </div>
       )}
 
       {stats.recentWrong.length > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 space-y-3">
-          <h2 className="font-bold">最近間違えた遺産</h2>
-          <div className="space-y-2">
+        <div className="card p-5 space-y-3" style={{ borderColor: "rgba(239,68,68,0.3)" }}>
+          <h2 className="font-semibold text-sm flex items-center gap-2">
+            <span className="w-6 h-6 rounded-md flex items-center justify-center text-xs" style={{ background: "rgba(239,68,68,0.1)", color: "var(--danger)" }}>×</span>
+            最近間違えた遺産
+          </h2>
+          <div className="space-y-1.5">
             {stats.recentWrong.map((item) => (
               <Link
                 key={item.id}
                 href={`/heritage/${item.id}`}
-                className="block bg-white rounded-lg p-2 text-sm hover:bg-red-50 border border-red-100"
+                className="block rounded-xl p-3 text-sm hover:bg-[var(--background)] transition-colors border border-[var(--border)]"
               >
                 <span className="font-medium">{item.name}</span>
-                <span className="text-xs text-red-600 ml-2">
+                <span className="text-xs ml-2" style={{ color: "var(--danger)" }}>
                   {item.wrongCount}回間違い
                 </span>
               </Link>
@@ -160,17 +160,11 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="flex gap-2">
-        <Link
-          href="/quiz"
-          className="flex-1 text-center bg-[var(--primary)] text-white py-3 rounded-lg font-semibold"
-        >
+      <div className="flex gap-3">
+        <Link href="/quiz" className="flex-1 btn-primary text-center py-3">
           クイズに挑戦
         </Link>
-        <Link
-          href="/heritage"
-          className="flex-1 text-center bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold"
-        >
+        <Link href="/heritage" className="flex-1 btn-secondary text-center py-3">
           遺産一覧
         </Link>
       </div>
@@ -182,27 +176,25 @@ function StatCard({
   label,
   value,
   color,
+  icon,
 }: {
   label: string;
   value: number | string;
   color?: string;
+  icon?: string;
 }) {
-  const colorClasses: Record<string, string> = {
-    green: "bg-green-50 border-green-200",
-    red: "bg-red-50 border-red-200",
-    amber: "bg-amber-50 border-amber-200",
-  };
-
   return (
-    <div
-      className={`rounded-xl border p-4 ${
-        color
-          ? colorClasses[color] || "bg-[var(--card-bg)] border-[var(--border)]"
-          : "bg-[var(--card-bg)] border-[var(--border)]"
-      }`}
-    >
-      <p className="text-xs text-[var(--muted)]">{label}</p>
-      <p className="text-2xl font-bold">{value}</p>
+    <div className="card p-4">
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-xs text-[var(--muted)] font-medium">{label}</p>
+        {icon && (
+          <span className="w-6 h-6 rounded-md flex items-center justify-center text-xs"
+            style={{ background: color ? `${color}15` : "var(--background)", color: color || "var(--muted)" }}>
+            {icon}
+          </span>
+        )}
+      </div>
+      <p className="text-2xl font-bold" style={{ color: color || "var(--foreground)" }}>{value}</p>
     </div>
   );
 }

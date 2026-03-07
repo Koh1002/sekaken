@@ -62,8 +62,8 @@ export default function PhotoPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">写真で学ぶ</h1>
-        <span className="text-sm text-[var(--muted)] px-3 py-1 rounded-full" style={{ background: "rgba(0,184,148,0.1)", color: "var(--primary)" }}>
+        <h1 className="page-header">写真で学ぶ</h1>
+        <span className="badge" style={{ background: "rgba(79,125,243,0.1)", color: "var(--primary)" }}>
           {current + 1} / {heritages.length}
         </span>
       </div>
@@ -83,32 +83,38 @@ export default function PhotoPage() {
           />
         </div>
 
-        <div className="p-4 space-y-3">
+        <div className="p-5 space-y-3">
           {showAnswer ? (
             <>
-              <h2 className="text-xl font-bold">{h.nameJa}</h2>
+              <h2 className="text-lg font-bold">{h.nameJa}</h2>
               <p className="text-sm text-[var(--muted)]">{h.nameEn}</p>
-              <p className="text-sm">
-                {h.countryJa} ・ {h.inscriptionYear}年 ・{" "}
-                {h.category === "Cultural"
-                  ? "文化遺産"
-                  : h.category === "Natural"
-                  ? "自然遺産"
-                  : "複合遺産"}
-              </p>
+              <div className="flex gap-2 flex-wrap">
+                <span className="badge" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+                  {h.countryJa}
+                </span>
+                <span className="badge" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+                  {h.inscriptionYear}年
+                </span>
+                <span className="badge" style={{
+                  background: h.category === "Cultural" ? "rgba(79,125,243,0.1)" : h.category === "Natural" ? "rgba(34,197,94,0.1)" : "rgba(168,85,247,0.1)",
+                  color: h.category === "Cultural" ? "#4f7df3" : h.category === "Natural" ? "#22c55e" : "#a855f7"
+                }}>
+                  {h.category === "Cultural" ? "文化遺産" : h.category === "Natural" ? "自然遺産" : "複合遺産"}
+                </span>
+              </div>
               {h.shortDescJa && (
-                <p className="text-sm text-[var(--muted)]">{h.shortDescJa}</p>
+                <p className="text-sm text-[var(--muted)] leading-relaxed">{h.shortDescJa}</p>
               )}
               {h.memoryTipJa && (
-                <div className="card p-3" style={{ borderColor: "var(--accent)" }}>
-                  <p className="text-sm">💡 {h.memoryTipJa}</p>
+                <div className="rounded-xl p-3 text-sm" style={{ background: "rgba(245,158,66,0.08)", border: "1px solid rgba(245,158,66,0.2)" }}>
+                  💡 {h.memoryTipJa}
                 </div>
               )}
               <StudyButtons heritageId={h.id} />
             </>
           ) : (
             <div className="text-center py-4">
-              <p className="text-lg text-[var(--muted)]">
+              <p className="text-base text-[var(--muted)]">
                 この世界遺産は何でしょう？
               </p>
             </div>
@@ -117,33 +123,21 @@ export default function PhotoPage() {
       </div>
 
       <div className="flex justify-between gap-2">
-        <button
-          onClick={prev}
-          className="px-4 py-2.5 rounded-xl text-sm font-medium border border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all"
-        >
+        <button onClick={prev} className="btn-secondary text-sm px-4">
           ← 前へ
         </button>
 
         {!showAnswer ? (
-          <button
-            onClick={() => setShowAnswer(true)}
-            className="btn-primary text-sm flex-1 text-center"
-          >
+          <button onClick={() => setShowAnswer(true)} className="btn-primary text-sm flex-1 text-center">
             答えを見る
           </button>
         ) : (
-          <button
-            onClick={next}
-            className="btn-primary text-sm flex-1 text-center"
-          >
+          <button onClick={next} className="btn-primary text-sm flex-1 text-center">
             次へ →
           </button>
         )}
 
-        <button
-          onClick={next}
-          className="px-4 py-2.5 rounded-xl text-sm font-medium border border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all"
-        >
+        <button onClick={next} className="btn-secondary text-sm px-4">
           スキップ
         </button>
       </div>

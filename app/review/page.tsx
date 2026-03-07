@@ -66,8 +66,8 @@ export default function ReviewPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-4">
-      <h1 className="text-2xl font-bold">復習リスト</h1>
+    <div className="max-w-3xl space-y-5">
+      <h1 className="page-header">復習リスト</h1>
 
       <div className="flex flex-wrap gap-2">
         {(
@@ -82,11 +82,7 @@ export default function ReviewPage() {
           <button
             key={key}
             onClick={() => setFilter(key)}
-            className={`px-3 py-1.5 rounded-lg text-sm border ${
-              filter === key
-                ? "bg-blue-100 border-blue-300 text-blue-700"
-                : "border-gray-200 text-gray-500"
-            }`}
+            className={`filter-btn ${filter === key ? "filter-btn-active" : ""}`}
           >
             {label}
           </button>
@@ -94,91 +90,88 @@ export default function ReviewPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-[var(--muted)] mb-4">
+        <div className="card text-center py-12 px-6">
+          <p className="text-[var(--muted)] mb-2">
             復習対象の遺産がありません
           </p>
-          <p className="text-sm text-[var(--muted)]">
+          <p className="text-sm text-[var(--muted)] mb-4">
             クイズで間違えたり、苦手登録・復習登録をすると表示されます
           </p>
-          <Link
-            href="/quiz"
-            className="inline-block mt-4 bg-[var(--primary)] text-white px-4 py-2 rounded-lg text-sm"
-          >
+          <Link href="/quiz" className="btn-primary inline-block text-sm">
             クイズに挑戦する
           </Link>
         </div>
       ) : (
         <>
-          <p className="text-sm text-[var(--muted)]">
-            {filtered.length}件の復習対象
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-[var(--muted)]">
+              {filtered.length}件の復習対象
+            </p>
+          </div>
 
-          <div className="flex flex-wrap gap-2 mb-2">
+          <div className="flex flex-wrap gap-2">
             <Link
               href={`/quiz?ids=${filtered.map((i) => i.heritage.id).join(",")}`}
-              className="bg-[var(--primary)] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90"
+              className="btn-primary text-sm"
             >
               全部復習クイズ ({filtered.length}件)
             </Link>
             {items.filter((i) => i.score >= 15).length > 0 && filter !== "high" && (
               <button
                 onClick={() => setFilter("high")}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90"
+                className="text-sm font-semibold px-4 py-2 rounded-xl text-white"
+                style={{ background: "var(--danger)" }}
               >
                 高優先度のみ表示
               </button>
             )}
-            <Link
-              href="/photo"
-              className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90"
-            >
+            <Link href="/photo" className="btn-secondary text-sm">
               写真で復習
             </Link>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {filtered.map((item) => (
               <div
                 key={item.heritage.id}
-                className="border border-[var(--border)] rounded-xl p-4 space-y-2"
+                className="card p-4 space-y-2.5"
               >
                 <div className="flex justify-between items-start">
                   <div>
                     <Link
                       href={`/heritage/${item.heritage.id}`}
-                      className="font-bold hover:text-[var(--primary)]"
+                      className="font-semibold hover:text-[var(--primary)] transition-colors"
                     >
                       {item.heritage.nameJa}
                     </Link>
-                    <p className="text-xs text-[var(--muted)]">
+                    <p className="text-xs text-[var(--muted)] mt-0.5">
                       {item.heritage.countryJa} ・{" "}
                       {item.heritage.inscriptionYear}年
                     </p>
                   </div>
-                  <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                  <span className="badge" style={{ background: "rgba(245,158,66,0.1)", color: "#d97b06" }}>
                     優先度: {item.score.toFixed(1)}
                   </span>
                 </div>
 
-                <div className="flex flex-wrap gap-2 text-xs text-[var(--muted)]">
+                <div className="flex flex-wrap gap-1.5">
                   {item.record.isWeak && (
-                    <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded">
+                    <span className="badge" style={{ background: "rgba(239,68,68,0.1)", color: "var(--danger)" }}>
                       苦手
                     </span>
                   )}
                   {item.record.isManualReview && (
-                    <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                    <span className="badge" style={{ background: "rgba(245,158,66,0.1)", color: "#d97b06" }}>
                       復習登録
                     </span>
                   )}
                   {item.record.wrongCount > 0 && (
-                    <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded">
+                    <span className="badge" style={{ background: "rgba(239,68,68,0.1)", color: "var(--danger)" }}>
                       誤答{item.record.wrongCount}回
                     </span>
                   )}
                   {item.record.correctStreak > 0 && (
-                    <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                    <span className="badge" style={{ background: "rgba(34,197,94,0.1)", color: "var(--success)" }}>
                       連続正解{item.record.correctStreak}
                     </span>
                   )}

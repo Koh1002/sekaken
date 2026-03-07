@@ -28,62 +28,71 @@ export function Navigation() {
 
   return (
     <>
-      {/* Desktop header */}
-      <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-[var(--border)] hidden sm:block shadow-sm" style={{ background: "rgba(255,255,255,0.92)" }}>
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
-            <Link href="/" className="font-bold text-lg flex items-center gap-2">
-              <MapIcon size={24} active />
-              <span style={{ color: "var(--primary)" }}>セカケン</span>
-            </Link>
-            <div className="flex gap-0.5 items-center">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm whitespace-nowrap transition-all ${
-                      isActive
-                        ? "font-semibold"
-                        : "text-[var(--muted)] hover:text-[var(--foreground)]"
-                    }`}
-                    style={isActive ? { background: "rgba(0,184,148,0.12)", color: "var(--primary)" } : {}}
-                  >
-                    <item.icon size={18} active={isActive} />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-              <Link
-                href="/auth"
-                className={`ml-2 flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm whitespace-nowrap transition-all border ${
-                  user ? "border-[var(--primary)]" : "border-[var(--border)] text-[var(--muted)]"
-                }`}
-                style={user ? { background: "rgba(0,184,148,0.1)", color: "var(--primary)" } : {}}
-              >
-                <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-                <span>{user ? "マイページ" : "ログイン"}</span>
-              </Link>
-            </div>
+      {/* Desktop Sidebar */}
+      <aside className="fixed left-0 top-0 bottom-0 w-[220px] z-50 hidden md:flex flex-col border-r border-[var(--border)]" style={{ background: "var(--sidebar-bg)" }}>
+        {/* Logo */}
+        <div className="px-5 h-16 flex items-center gap-2.5 border-b border-[var(--border)]">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "var(--primary)" }}>
+            <MapIcon size={18} />
           </div>
+          <span className="font-bold text-base tracking-tight" style={{ color: "var(--primary)" }}>セカケン</span>
         </div>
-      </nav>
+
+        {/* Nav Items */}
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
+                  isActive
+                    ? "font-semibold"
+                    : "text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--background)]"
+                }`}
+                style={isActive ? { background: "var(--sidebar-active)", color: "var(--primary)" } : {}}
+              >
+                <item.icon size={20} active={isActive} />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* User section */}
+        <div className="px-3 py-4 border-t border-[var(--border)]">
+          <Link
+            href="/auth"
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
+              user ? "font-medium" : "text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--background)]"
+            }`}
+            style={user ? { color: "var(--primary)" } : {}}
+          >
+            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: user ? "rgba(79,125,243,0.12)" : "var(--background)" }}>
+              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <span>{user ? "マイページ" : "ログイン"}</span>
+          </Link>
+        </div>
+      </aside>
 
       {/* Mobile header */}
-      <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-[var(--border)] sm:hidden shadow-sm" style={{ background: "rgba(255,255,255,0.92)" }}>
-        <div className="flex items-center justify-between h-12 px-3">
-          <Link href="/" className="font-bold text-base flex items-center gap-1.5">
-            <MapIcon size={22} active />
+      <nav className="sticky top-0 z-50 border-b border-[var(--border)] md:hidden" style={{ background: "var(--sidebar-bg)" }}>
+        <div className="flex items-center justify-between h-14 px-4">
+          <Link href="/" className="font-bold text-base flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "var(--primary)" }}>
+              <MapIcon size={16} />
+            </div>
             <span style={{ color: "var(--primary)" }}>セカケン</span>
           </Link>
           <Link
             href="/auth"
-            className="p-2 rounded-xl text-sm"
-            style={{ color: user ? "var(--primary)" : "var(--muted)" }}
+            className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors"
+            style={{ color: user ? "var(--primary)" : "var(--muted)", background: user ? "rgba(79,125,243,0.08)" : "transparent" }}
           >
             <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
@@ -94,19 +103,19 @@ export function Navigation() {
       </nav>
 
       {/* Mobile bottom tab bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-md border-t border-[var(--border)] sm:hidden" style={{ background: "rgba(255,255,255,0.95)" }}>
-        <div className="flex justify-around items-center h-14 px-1 pb-[env(safe-area-inset-bottom)]">
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-[var(--border)] md:hidden" style={{ background: "var(--sidebar-bg)" }}>
+        <div className="flex justify-around items-center h-16 px-1 pb-[env(safe-area-inset-bottom)]">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex flex-col items-center justify-center flex-1 py-1 rounded-lg transition-colors"
+                className="flex flex-col items-center justify-center flex-1 py-1.5 rounded-xl transition-colors"
                 style={{ color: isActive ? "var(--primary)" : "var(--muted)" }}
               >
-                <item.icon size={20} active={isActive} />
-                <span className={`text-[10px] mt-0.5 leading-none ${isActive ? "font-semibold" : ""}`}>
+                <item.icon size={22} active={isActive} />
+                <span className={`text-[10px] mt-1 leading-none ${isActive ? "font-semibold" : ""}`}>
                   {item.label}
                 </span>
               </Link>

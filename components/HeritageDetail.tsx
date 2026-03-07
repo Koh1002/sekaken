@@ -16,16 +16,24 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
       ? "自然遺産"
       : "複合遺産";
 
+  const catStyle =
+    heritage.category === "Cultural"
+      ? { bg: "rgba(79,125,243,0.1)", color: "#4f7df3" }
+      : heritage.category === "Natural"
+      ? { bg: "rgba(34,197,94,0.1)", color: "#22c55e" }
+      : { bg: "rgba(168,85,247,0.1)", color: "#a855f7" };
+
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl space-y-5">
       <Link
         href="/heritage"
-        className="text-sm text-[var(--primary)] hover:underline"
+        className="text-sm hover:underline inline-flex items-center gap-1"
+        style={{ color: "var(--primary)" }}
       >
         ← 一覧に戻る
       </Link>
 
-      <div className="rounded-2xl overflow-hidden">
+      <div className="card overflow-hidden">
         <HeritageImage
           imageUrl={heritage.imageUrl}
           nameEn={heritage.nameEn}
@@ -34,51 +42,53 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
           className="w-full h-64"
         />
         {heritage.imageAttribution && (
-          <p className="text-xs text-[var(--muted)] p-2 bg-[var(--card-bg)]">
+          <p className="text-xs text-[var(--muted)] px-4 py-2 border-t border-[var(--border)]">
             📷 {heritage.imageAttribution}
           </p>
         )}
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold">{heritage.nameJa}</h1>
-        <p className="text-sm text-[var(--muted)]">{heritage.nameEn}</p>
+        <h1 className="text-xl font-bold">{heritage.nameJa}</h1>
+        <p className="text-sm text-[var(--muted)] mt-0.5">{heritage.nameEn}</p>
       </div>
 
       <StudyButtons heritageId={heritage.id} />
 
-      <div className="grid grid-cols-2 gap-3 text-sm">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
         <InfoItem label="国" value={heritage.countryJa} />
         <InfoItem label="地域" value={heritage.region} />
-        <InfoItem label="カテゴリ" value={categoryLabel} />
+        <InfoItem label="カテゴリ" value={categoryLabel} badgeStyle={catStyle} />
         <InfoItem label="登録年" value={`${heritage.inscriptionYear}年`} />
         <InfoItem label="登録基準" value={heritage.unescoCriteria || "—"} />
         <InfoItem
           label="検定重要度"
           value={"★".repeat(heritage.examImportance)}
+          valueColor="#f59e42"
         />
       </div>
 
       {heritage.shortDescJa && (
-        <div className="card p-4" style={{ borderColor: "var(--primary)", borderWidth: "1px" }}>
-          <h2 className="font-bold text-sm mb-1" style={{ color: "var(--primary)" }}>概要</h2>
-          <p className="text-sm">{heritage.shortDescJa}</p>
+        <div className="card p-4" style={{ borderColor: "rgba(79,125,243,0.3)" }}>
+          <h2 className="font-semibold text-sm mb-1.5" style={{ color: "var(--primary)" }}>概要</h2>
+          <p className="text-sm leading-relaxed">{heritage.shortDescJa}</p>
         </div>
       )}
 
       {heritage.memoryTipJa && (
-        <div className="card p-4" style={{ borderColor: "var(--accent)", borderWidth: "1px" }}>
-          <h2 className="font-bold text-sm mb-1" style={{ color: "var(--accent-dark)" }}>覚え方のポイント</h2>
-          <p className="text-sm">{heritage.memoryTipJa}</p>
+        <div className="card p-4" style={{ borderColor: "rgba(245,158,66,0.3)" }}>
+          <h2 className="font-semibold text-sm mb-1.5" style={{ color: "var(--accent-dark)" }}>覚え方のポイント</h2>
+          <p className="text-sm leading-relaxed">{heritage.memoryTipJa}</p>
         </div>
       )}
 
       {heritage.tags && (
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1.5">
           {heritage.tags.split(",").map((tag) => (
             <span
               key={tag}
-              className="px-2 py-0.5 bg-gray-100 rounded text-xs text-[var(--muted)]"
+              className="badge"
+              style={{ background: "var(--background)", color: "var(--muted)" }}
             >
               {tag.trim()}
             </span>
@@ -86,12 +96,12 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
         </div>
       )}
 
-      <div className="rounded-xl overflow-hidden h-48">
+      <div className="card overflow-hidden h-48">
         <DetailMap latitude={heritage.latitude} longitude={heritage.longitude} name={heritage.nameJa} />
       </div>
 
-      <div className="space-y-2 text-xs text-[var(--muted)]">
-        <h3 className="font-bold text-sm text-[var(--foreground)]">出典・リンク</h3>
+      <div className="card p-4 space-y-2 text-xs text-[var(--muted)]">
+        <h3 className="font-semibold text-sm text-[var(--foreground)]">出典・リンク</h3>
         {heritage.unescoUrl && (
           <p>
             UNESCO:{" "}
@@ -99,7 +109,8 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
               href={heritage.unescoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[var(--primary)] hover:underline"
+              className="hover:underline"
+              style={{ color: "var(--primary)" }}
             >
               {heritage.unescoUrl}
             </a>
@@ -112,7 +123,8 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
               href={heritage.officialUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[var(--primary)] hover:underline"
+              className="hover:underline"
+              style={{ color: "var(--primary)" }}
             >
               {heritage.officialUrl}
             </a>
@@ -129,7 +141,7 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
         </Link>
         <Link
           href={`/photo?id=${heritage.id}`}
-          className="px-4 py-3 rounded-xl text-sm font-semibold border border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all text-center"
+          className="btn-secondary text-sm text-center"
         >
           写真で学ぶ
         </Link>
@@ -138,11 +150,15 @@ export function HeritageDetail({ heritage }: { heritage: Heritage }) {
   );
 }
 
-function InfoItem({ label, value }: { label: string; value: string }) {
+function InfoItem({ label, value, badgeStyle, valueColor }: { label: string; value: string; badgeStyle?: { bg: string; color: string }; valueColor?: string }) {
   return (
     <div className="card p-3">
-      <p className="text-xs text-[var(--muted)]">{label}</p>
-      <p className="font-semibold">{value}</p>
+      <p className="text-xs text-[var(--muted)] mb-0.5">{label}</p>
+      {badgeStyle ? (
+        <span className="badge" style={{ background: badgeStyle.bg, color: badgeStyle.color }}>{value}</span>
+      ) : (
+        <p className="font-semibold" style={valueColor ? { color: valueColor } : {}}>{value}</p>
+      )}
     </div>
   );
 }
