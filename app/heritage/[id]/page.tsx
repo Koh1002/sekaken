@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 import { HeritageDetail } from "@/components/HeritageDetail";
 
 export default async function HeritageDetailPage({
