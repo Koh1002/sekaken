@@ -1,6 +1,7 @@
 import { supabase, toHeritage } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import { QuizQuestion } from "@/lib/types";
+import { Heritage } from "@/lib/types";
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -9,6 +10,50 @@ function shuffle<T>(arr: T[]): T[] {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+/** 通常クイズ用: 世界遺産ごとにバリエーション豊かな問題文を生成 */
+function generateNameQuestion(h: Heritage): string {
+  const patterns: (() => string | null)[] = [
+    // shortDescJaベース
+    () => h.shortDescJa ? `${h.shortDescJa}\nこの世界遺産の名前は？` : null,
+    // 覚え方ヒントベース
+    () => h.memoryTipJa ? `ヒント: ${h.memoryTipJa}\nこの世界遺産は？` : null,
+    // カテゴリ＋地域＋年
+    () => {
+      const cat = h.category === "Cultural" ? "文化遺産" : h.category === "Natural" ? "自然遺産" : "複合遺産";
+      return `${h.countryJa}にある${cat}で、${h.inscriptionYear}年に世界遺産に登録されました。この遺産の名前は？`;
+    },
+    // UNESCO基準ベース
+    () => {
+      if (!h.unescoCriteria) return null;
+      const cat = h.category === "Cultural" ? "文化遺産" : h.category === "Natural" ? "自然遺産" : "複合遺産";
+      return `登録基準「${h.unescoCriteria}」で登録された${h.countryJa}の${cat}は？`;
+    },
+    // タグベース
+    () => {
+      if (!h.tags) return null;
+      const tagList = h.tags.split(",").map(t => t.trim()).slice(0, 3).join("、");
+      return `「${tagList}」に関連する${h.countryJa}の世界遺産は？`;
+    },
+    // 位置情報ベース
+    () => {
+      const lat = h.latitude > 0 ? `北緯${Math.abs(h.latitude).toFixed(0)}度` : `南緯${Math.abs(h.latitude).toFixed(0)}度`;
+      const lng = h.longitude > 0 ? `東経${Math.abs(h.longitude).toFixed(0)}度` : `西経${Math.abs(h.longitude).toFixed(0)}度`;
+      return `${h.countryJa}の${lat}・${lng}付近にある世界遺産は？`;
+    },
+  ];
+
+  // shortDescJaがあれば優先的に使用
+  const shuffled = shuffle(patterns);
+  for (const p of shuffled) {
+    const result = p();
+    if (result) return result;
+  }
+
+  // フォールバック
+  const cat = h.category === "Cultural" ? "文化遺産" : h.category === "Natural" ? "自然遺産" : "複合遺産";
+  return `${h.countryJa}にあり、${h.inscriptionYear}年に登録された${cat}は何ですか？`;
 }
 
 export async function GET(request: NextRequest) {
@@ -78,7 +123,7 @@ export async function GET(request: NextRequest) {
         break;
       }
       case "map": {
-        question = `緯度${h.latitude.toFixed(1)}°, 経度${h.longitude.toFixed(1)}°付近にある世界遺産は？（${h.countryJa}）`;
+        question = `地図上のピンが示す世界遺産はどれですか？（${h.countryJa}）`;
         const allOpts = shuffle([
           h.nameJa,
           ...others.map((o) => o.nameJa),
@@ -102,7 +147,8 @@ export async function GET(request: NextRequest) {
         break;
       }
       default: {
-        question = `${h.countryJa}にある${h.category === "Cultural" ? "文化" : h.category === "Natural" ? "自然" : "複合"}遺産で、${h.inscriptionYear}年登録のものは？`;
+        // name type - 充実した問題文を生成
+        question = generateNameQuestion(h);
         const allOptions = shuffle([
           h.nameJa,
           ...others.map((o) => o.nameJa),
@@ -120,7 +166,13 @@ export async function GET(request: NextRequest) {
       options,
       correctIndex,
       heritageId: h.id,
+      // photo quiz: image + fallback data
       imageUrl: type === "photo" ? h.imageUrl : null,
+      nameEn: type === "photo" ? h.nameEn : undefined,
+      category: type === "photo" ? h.category : undefined,
+      // map quiz: coordinates
+      latitude: type === "map" ? h.latitude : undefined,
+      longitude: type === "map" ? h.longitude : undefined,
     };
   });
 

@@ -6,6 +6,7 @@ import { AuthProvider } from "@/lib/auth-context";
 export const metadata: Metadata = {
   title: "世界遺産検定2級 学習アプリ",
   description: "世界遺産検定2級の学習をサポートするWebアプリケーション",
+  manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {

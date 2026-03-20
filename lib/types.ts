@@ -23,12 +23,18 @@ export interface Heritage {
 
 export interface QuizQuestion {
   id: string;
-  type: "name" | "country" | "photo" | "description" | "truefalse";
+  type: "name" | "country" | "photo" | "description" | "map" | "truefalse";
   question: string;
   options: string[];
   correctIndex: number;
   heritageId: number;
   imageUrl?: string | null;
+  // photo quiz: fallback image fetch
+  nameEn?: string;
+  category?: string;
+  // map quiz: pin location
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface QuizResult {

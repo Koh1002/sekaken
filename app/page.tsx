@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { StudyStats } from "@/components/StudyStats";
+import { NotificationToggle } from "@/components/NotificationToggle";
 import { ListIcon, MapIcon, CameraIcon, QuizIcon, ReviewIcon, ChartIcon } from "@/components/NavIcons";
 
 export const dynamic = "force-dynamic";
@@ -116,6 +117,9 @@ export default async function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* Notification Reminder */}
+      <NotificationToggle />
 
       <div className="text-center text-xs text-[var(--muted)] pt-4 border-t border-[var(--border)]">
         <p>データ出典: UNESCO World Heritage Centre, 文化庁, Wikipedia</p>

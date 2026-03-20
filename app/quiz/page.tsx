@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { QuizQuestion, QuizResult } from "@/lib/types";
 import { markCorrect, markWrong } from "@/lib/study-storage";
 import { recordCorrectAnswer, recordWrongAnswer, addStudyTime } from "@/lib/study-activity";
+import { HeritageImage } from "@/components/HeritageImage";
+
+const QuizMapView = dynamic(() => import("@/components/QuizMapView"), { ssr: false });
 
 type QuizState = "setup" | "playing" | "result";
 
@@ -99,7 +103,7 @@ export default function QuizPage() {
               <option value="country">遺産から国を当てる</option>
               <option value="photo">写真から遺産名を当てる</option>
               <option value="description">説明から遺産名を当てる</option>
-              <option value="map">地図(座標)から遺産を当てる</option>
+              <option value="map">地図から遺産を当てる</option>
               <option value="truefalse">○×問題</option>
             </select>
           </div>
@@ -211,14 +215,28 @@ export default function QuizPage() {
         <div className="progress-bar-fill" style={{ width: `${((currentQ + 1) / questions.length) * 100}%` }} />
       </div>
 
-      {q.imageUrl && (
+      {/* 写真クイズ: HeritageImageコンポーネントで確実に写真表示 */}
+      {q.type === "photo" && (
         <div className="rounded-xl overflow-hidden h-48" style={{ boxShadow: "var(--shadow-sm)" }}>
-          <img src={q.imageUrl} alt="クイズ画像" className="w-full h-full object-cover" />
+          <HeritageImage
+            imageUrl={q.imageUrl || null}
+            nameEn={q.nameEn || ""}
+            nameJa="クイズ画像"
+            category={q.category || "Cultural"}
+            className="w-full h-full"
+          />
+        </div>
+      )}
+
+      {/* 地図クイズ: Leafletマップにピンを表示 */}
+      {q.type === "map" && q.latitude !== undefined && q.longitude !== undefined && (
+        <div className="rounded-xl overflow-hidden h-56" style={{ boxShadow: "var(--shadow-sm)" }}>
+          <QuizMapView latitude={q.latitude} longitude={q.longitude} />
         </div>
       )}
 
       <div className="card p-4">
-        <p className="text-base font-medium leading-relaxed">{q.question}</p>
+        <p className="text-base font-medium leading-relaxed whitespace-pre-line">{q.question}</p>
       </div>
 
       <div className="space-y-2">
