@@ -243,6 +243,7 @@ export async function GET(request: NextRequest) {
   const region = searchParams.get("region");
   const ids = searchParams.get("ids");
   const importance = searchParams.get("importance");
+  const priority = searchParams.get("priority"); // 優先出題する遺産ID(重み付け出題)
 
   // 遺産DBに依存しない固定バンク系は先に処理
   if (type === "criteria-meaning") {
@@ -295,7 +296,21 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Not enough data" }, { status: 400 });
   }
 
-  const selected = shuffle(allHeritages).slice(0, count);
+  // 重み付け出題: priority で指定された遺産を優先的に正答として採用。
+  // 不足分は残りからランダム補充。誤答選択肢(others)は常に全プールから取るため質を保つ。
+  let selected: Heritage[];
+  if (priority) {
+    const priorityIds = priority.split(",").map(Number);
+    const byId = new Map(allHeritages.map((h) => [h.id, h]));
+    const pri = priorityIds
+      .map((id) => byId.get(id))
+      .filter((h): h is Heritage => !!h);
+    const rest = shuffle(allHeritages.filter((h) => !priorityIds.includes(h.id)));
+    selected = [...pri, ...rest].slice(0, count);
+  } else {
+    selected = shuffle(allHeritages).slice(0, count);
+  }
+
   const questions: QuizQuestion[] = selected.map((h, idx) => {
     const others = shuffle(
       allHeritages.filter((o) => o.id !== h.id)

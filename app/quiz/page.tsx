@@ -2,14 +2,46 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { QuizQuestion, QuizResult } from "@/lib/types";
-import { markCorrect, markWrong } from "@/lib/study-storage";
+import { QuizQuestion, QuizResult, Heritage } from "@/lib/types";
+import { markCorrect, markWrong, getAllRecords } from "@/lib/study-storage";
+import { calculateReviewScore } from "@/lib/review-score";
 import { recordCorrectAnswer, recordWrongAnswer, addStudyTime } from "@/lib/study-activity";
 import { HeritageImage } from "@/components/HeritageImage";
 
 const QuizMapView = dynamic(() => import("@/components/QuizMapView"), { ssr: false });
 
 type QuizState = "setup" | "playing" | "result";
+
+// 遺産ベースの出題形式(重み付け対象)。固定バンク系(concept/serial/criteria-meaning)は対象外。
+const HERITAGE_BASED_TYPES = ["name", "country", "photo", "description", "map", "truefalse", "criteria", "year"];
+
+// 学習記録と重要度から重み付けし、count件の遺産IDを非復元抽出する
+function pickWeightedIds(pool: Heritage[], count: number): number[] {
+  const records = getAllRecords();
+  const items = pool.map((h) => {
+    const rec = records[h.id];
+    const reviewScore = rec ? calculateReviewScore(rec) : 0;
+    // 重要度 + 復習優先度(苦手/誤答/放置を含む) + 未学習ボーナス
+    const weight = Math.max(0.1, h.examImportance + Math.max(0, reviewScore) * 0.5 + (rec ? 0 : 2));
+    return { id: h.id, weight };
+  });
+
+  const chosen: number[] = [];
+  const arr = [...items];
+  while (chosen.length < count && arr.length > 0) {
+    const total = arr.reduce((s, i) => s + i.weight, 0);
+    let r = Math.random() * total;
+    let idx = 0;
+    for (; idx < arr.length; idx++) {
+      r -= arr[idx].weight;
+      if (r <= 0) break;
+    }
+    if (idx >= arr.length) idx = arr.length - 1;
+    chosen.push(arr[idx].id);
+    arr.splice(idx, 1);
+  }
+  return chosen;
+}
 
 export default function QuizPage() {
   const [state, setState] = useState<QuizState>("setup");
@@ -19,13 +51,14 @@ export default function QuizPage() {
   const [region, setRegion] = useState("all");
   const [category, setCategory] = useState("all");
   const [importance, setImportance] = useState("all");
+  const [weighted, setWeighted] = useState(true);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [results, setResults] = useState<QuizResult[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const startQuiz = () => {
+  const startQuiz = async () => {
     setLoading(true);
     const params = new URLSearchParams({
       type: quizType,
@@ -37,6 +70,24 @@ export default function QuizPage() {
 
     const idsParam = new URLSearchParams(window.location.search).get("ids");
     if (idsParam) params.set("ids", idsParam);
+
+    // 重み付け出題: 遺産ベースの形式かつ復習モード(ids)でない場合のみ。
+    // 学習記録(苦手/誤答/放置)と重要度から優先する遺産IDを決め、priorityで渡す。
+    if (weighted && HERITAGE_BASED_TYPES.includes(quizType) && !idsParam) {
+      try {
+        const poolParams = new URLSearchParams();
+        if (region !== "all") poolParams.set("region", region);
+        if (category !== "all") poolParams.set("category", category);
+        if (importance !== "all") poolParams.set("importance", importance);
+        const pool: Heritage[] = await fetch(`/api/heritages?${poolParams}`).then((r) => r.json());
+        if (Array.isArray(pool) && pool.length > 0) {
+          const priorityIds = pickWeightedIds(pool, count);
+          if (priorityIds.length > 0) params.set("priority", priorityIds.join(","));
+        }
+      } catch {
+        // プール取得失敗時は重み付けなしで続行
+      }
+    }
 
     fetch(`/api/quiz?${params}`)
       .then((res) => res.json())
@@ -160,6 +211,23 @@ export default function QuizPage() {
               <option value="5">★5のみ</option>
             </select>
           </div>
+
+          {HERITAGE_BASED_TYPES.includes(quizType) && (
+            <label className="flex items-start gap-3 cursor-pointer rounded-xl border border-[var(--border)] p-3.5">
+              <input
+                type="checkbox"
+                checked={weighted}
+                onChange={(e) => setWeighted(e.target.checked)}
+                className="mt-0.5 h-4 w-4 accent-[var(--primary)]"
+              />
+              <span className="text-sm">
+                <span className="font-semibold">苦手・重要度を優先して出題</span>
+                <span className="block text-xs text-[var(--muted)] mt-0.5">
+                  間違えた・苦手登録・しばらく学習していない遺産や、出題重要度の高い遺産を優先します。
+                </span>
+              </span>
+            </label>
+          )}
 
           <button onClick={startQuiz} disabled={loading} className="w-full btn-primary py-3 text-center disabled:opacity-50">
             {loading ? "読込中..." : "クイズ開始"}
