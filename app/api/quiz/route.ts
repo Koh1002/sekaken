@@ -5,6 +5,7 @@ import { Heritage } from "@/lib/types";
 import { CRITERIA } from "@/lib/criteria";
 import { CONCEPT_QUESTIONS } from "@/lib/concept-questions";
 import { japanSerialProperties, PREFECTURES } from "@/data/japan-serial-properties";
+import { worldSerialProperties, COUNTRIES_JA } from "@/data/world-serial-properties";
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -120,6 +121,66 @@ function generateSerialQuestions(count: number): QuizQuestion[] {
         id: `serial-nopref-${p.heritageId}`,
         type: "serial",
         question: `「${p.nameJa}」の構成資産が無い都道府県はどれですか？`,
+        options: opts,
+        correctIndex: opts.indexOf(correct),
+        heritageId: p.heritageId,
+      });
+    }
+  }
+
+  // --- 海外(複数国にまたがる)連続遺産 ---
+  const allCountryCounts = Array.from(new Set(worldSerialProperties.map((p) => p.countries.length)));
+  for (const p of worldSerialProperties) {
+    // 構成資産数
+    if (p.totalAssets != null) {
+      const nums = [p.totalAssets, ...shuffle(allCounts.filter((c) => c !== p.totalAssets)).slice(0, 3)];
+      let off = 1;
+      while (nums.length < 4) {
+        const cand = p.totalAssets + off;
+        if (cand > 0 && !nums.includes(cand)) nums.push(cand);
+        off = off > 0 ? -off : -off + 1;
+      }
+      const opts = shuffle(nums);
+      candidates.push({
+        id: `wserial-count-${p.heritageId}-${p.inscriptionYear}`,
+        type: "serial",
+        question: `「${p.nameJa}」の構成資産はいくつですか？`,
+        options: opts.map((n) => `${n}件`),
+        correctIndex: opts.indexOf(p.totalAssets),
+        heritageId: p.heritageId,
+      });
+    }
+
+    // またがる国の数
+    {
+      const correctN = p.countries.length;
+      const nums = [correctN, ...shuffle(allCountryCounts.filter((c) => c !== correctN)).slice(0, 3)];
+      let off = 1;
+      while (nums.length < 4) {
+        const cand = correctN + off;
+        if (cand > 0 && !nums.includes(cand)) nums.push(cand);
+        off = off > 0 ? -off : -off + 1;
+      }
+      const opts = shuffle(nums);
+      candidates.push({
+        id: `wserial-numcountries-${p.heritageId}-${p.inscriptionYear}`,
+        type: "serial",
+        question: `「${p.nameJa}」は何か国にまたがる世界遺産ですか？`,
+        options: opts.map((n) => `${n}か国`),
+        correctIndex: opts.indexOf(correctN),
+        heritageId: p.heritageId,
+      });
+    }
+
+    // またがる国に含まれない国
+    {
+      const correct = shuffle(COUNTRIES_JA.filter((c) => !p.countries.includes(c)))[0];
+      const members = shuffle(p.countries).slice(0, 3);
+      const opts = shuffle([correct, ...members]);
+      candidates.push({
+        id: `wserial-nocountry-${p.heritageId}-${p.inscriptionYear}`,
+        type: "serial",
+        question: `「${p.nameJa}」がまたがる国に含まれないのはどれですか？`,
         options: opts,
         correctIndex: opts.indexOf(correct),
         heritageId: p.heritageId,
