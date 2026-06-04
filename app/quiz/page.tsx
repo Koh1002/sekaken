@@ -229,7 +229,7 @@ export default function QuizPage() {
             </label>
           )}
 
-          <button onClick={startQuiz} disabled={loading} className="w-full btn-primary py-3 text-center disabled:opacity-50">
+          <button data-testid="quiz-start" onClick={startQuiz} disabled={loading} className="w-full btn-primary py-3 text-center disabled:opacity-50">
             {loading ? "読込中..." : "クイズ開始"}
           </button>
         </div>
@@ -357,7 +357,7 @@ export default function QuizPage() {
             }
           }
           return (
-            <button key={idx} onClick={() => handleAnswer(idx)} disabled={selected !== null}
+            <button key={idx} data-testid="quiz-option" onClick={() => handleAnswer(idx)} disabled={selected !== null}
               className={`w-full text-left p-3.5 rounded-xl border font-medium transition-all ${extraClass}`} style={style}>
               {option}
             </button>
@@ -366,7 +366,7 @@ export default function QuizPage() {
       </div>
 
       {selected !== null && (
-        <button onClick={nextQuestion} className="w-full btn-primary py-3 text-center">
+        <button data-testid="quiz-next" onClick={nextQuestion} className="w-full btn-primary py-3 text-center">
           {currentQ + 1 >= questions.length ? "結果を見る" : "次の問題"}
         </button>
       )}

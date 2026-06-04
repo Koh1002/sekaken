@@ -9,7 +9,10 @@
     "lint": "next lint",
     "vercel-build": "next build",
     "seed": "npx tsx scripts/generate-sql.ts > supabase-seed.sql",
-    "validate": "npx tsx scripts/validate-data.ts"
+    "validate": "npx tsx scripts/validate-data.ts",
+    "test:data": "npx tsx scripts/test-data.ts",
+    "test:api": "npx tsx scripts/test-api.ts",
+    "test:e2e": "playwright test"
   },
   "repository": {
     "type": "git",
@@ -32,5 +35,8 @@
     "react-leaflet": "^5.0.0",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
   }
 }
