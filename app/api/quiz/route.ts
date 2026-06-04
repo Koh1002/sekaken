@@ -63,11 +63,35 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get("category");
   const region = searchParams.get("region");
   const ids = searchParams.get("ids");
+  const importance = searchParams.get("importance");
 
   let query = supabase.from("heritages").select("*");
-  if (category && category !== "all") query = query.eq("category", category);
-  if (region === "japan") query = query.eq("country_en", "Japan");
-  if (ids) query = query.in("id", ids.split(",").map(Number));
+
+  if (ids) {
+    // 復習モード: 指定IDのみ出題（地域/カテゴリ/重要度フィルタは無視）
+    query = query.in("id", ids.split(",").map(Number));
+  } else {
+    if (category && category !== "all") query = query.eq("category", category);
+
+    if (region && region !== "all") {
+      if (region === "japan") {
+        query = query.eq("country_en", "Japan");
+      } else {
+        const regionMap: Record<string, string> = {
+          europe: "Europe and North America",
+          asia: "Asia and the Pacific",
+          americas: "Latin America and the Caribbean",
+          africa: "Africa",
+          arab: "Arab States",
+        };
+        if (regionMap[region]) {
+          query = query.eq("region", regionMap[region]);
+        }
+      }
+    }
+
+    if (importance) query = query.gte("exam_importance", parseInt(importance));
+  }
 
   const { data, error } = await query;
 

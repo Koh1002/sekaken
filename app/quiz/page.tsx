@@ -17,6 +17,8 @@ export default function QuizPage() {
   const [quizType, setQuizType] = useState("name");
   const [count, setCount] = useState(10);
   const [region, setRegion] = useState("all");
+  const [category, setCategory] = useState("all");
+  const [importance, setImportance] = useState("all");
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [results, setResults] = useState<QuizResult[]>([]);
@@ -30,6 +32,8 @@ export default function QuizPage() {
       count: count.toString(),
     });
     if (region !== "all") params.set("region", region);
+    if (category !== "all") params.set("category", category);
+    if (importance !== "all") params.set("importance", importance);
 
     const idsParam = new URLSearchParams(window.location.search).get("ids");
     if (idsParam) params.set("ids", idsParam);
@@ -119,10 +123,35 @@ export default function QuizPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider mb-2">出題範囲</label>
+            <label className="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider mb-2">出題範囲（地域）</label>
             <select value={region} onChange={(e) => setRegion(e.target.value)} className="form-input">
+              <option value="all">全地域</option>
+              <option value="japan">日本</option>
+              <option value="asia">アジア太平洋</option>
+              <option value="europe">ヨーロッパ・北米</option>
+              <option value="americas">中南米・カリブ海</option>
+              <option value="africa">アフリカ</option>
+              <option value="arab">アラブ諸国</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider mb-2">カテゴリ</label>
+            <select value={category} onChange={(e) => setCategory(e.target.value)} className="form-input">
+              <option value="all">全カテゴリ</option>
+              <option value="Cultural">文化遺産</option>
+              <option value="Natural">自然遺産</option>
+              <option value="Mixed">複合遺産</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider mb-2">重要度</label>
+            <select value={importance} onChange={(e) => setImportance(e.target.value)} className="form-input">
               <option value="all">すべて</option>
-              <option value="japan">日本のみ</option>
+              <option value="3">★3以上</option>
+              <option value="4">★4以上</option>
+              <option value="5">★5のみ</option>
             </select>
           </div>
 

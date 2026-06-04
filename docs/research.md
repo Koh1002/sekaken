@@ -69,7 +69,8 @@
 - Server Components / Client Components
 - Route Groups / Dynamic Routes
 
-### Prisma + PostgreSQL
+### Prisma + PostgreSQL（※当時の構想。実装では不採用）
+> リサーチ当時はPrisma + SQLite/PostgreSQLを想定していたが、最終的に **Supabase(supabase-js)直接アクセス** に変更した。現行構成は docs/architecture.md を参照。
 - Vercel Postgres or Neon (本番)
 - SQLite (開発)
 - postinstall: `prisma generate`

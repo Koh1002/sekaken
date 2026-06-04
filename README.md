@@ -13,17 +13,18 @@
 | クイズ | 6タイプ(ヒント→遺産名, 遺産→国, 写真→遺産名, 説明→遺産名, 地図→遺産, ○×) |
 | 復習 | 優先度付き復習リスト、高優先度フィルタ、間違えた問題だけ再挑戦 |
 | ダッシュボード | 学習進捗サマリー、正答率、苦手一覧、今日のおすすめ復習 |
+| アカウント | 任意ログイン(Supabase Auth)。ログイン時は学習データをクラウド同期しデバイス間で引き継ぎ |
 
 ## データ
 
-- 合計181件の世界遺産データ
+- 合計301件の世界遺産データ
   - 日本: 26件 (全件網羅)
-  - ヨーロッパ・北米: 54件
-  - アジア・太平洋: 40件
-  - ラテンアメリカ: 24件
-  - アフリカ: 17件
-  - アラブ諸国: 20件
-- 検定2級の重要遺産を網羅(第1号遺産12件、負の遺産、抹消遺産、複合遺産等)
+  - ヨーロッパ・北米: 100件
+  - アジア・太平洋: 70件
+  - ラテンアメリカ・カリブ: 40件
+  - アラブ諸国: 35件
+  - アフリカ: 30件
+- 検定2級の重要遺産を網羅(第1号遺産、負の遺産、抹消遺産、複合遺産等)
 - 各遺産に暗記ポイント・出題重要度(1-5)を付与
 
 ## 復習ロジック
@@ -32,30 +33,35 @@
 review_score = wrong_count * 3 + days_since_last_study * 1.5 + weak_flag * 5 + manual_review_flag * 4 - correct_streak * 2
 ```
 
-学習データはlocalStorageに永続化。復習スコアが高いものから優先的に表示。
+学習データはlocalStorageに永続化(未ログイン時)。ログイン時はSupabaseの`study_records`にも同期。復習スコアが高いものから優先的に表示。
 
 ## 技術スタック
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
-- **DB**: Prisma + SQLite (ローカル) / PostgreSQL (本番)
+- **DB / Auth**: Supabase (PostgreSQL) — `@supabase/supabase-js` で直接アクセス
 - **地図**: Leaflet + react-leaflet
 - **CSS**: Tailwind CSS 4
 - **デプロイ**: Vercel
 
+> 注: 初期構想ではPrisma + SQLite/PostgreSQLを採用予定でしたが、現在はSupabase(supabase-js)直接アクセスに統一しています。Prismaは使用していません。
+
 ## セットアップ
 
 ```bash
-# 依存インストール
+# 1. 依存インストール
 npm install
 
-# DB初期化
-npx prisma migrate dev
+# 2. 環境変数を設定 (.env.local)
+#    .env.example をコピーして Supabase の URL / anon key を記入
+cp .env.example .env.local
 
-# データ投入
-npx tsx scripts/seed-db.ts
+# 3. Supabase 側の初期化 (Supabase Dashboard の SQL Editor で実行)
+#    - heritages テーブル + 全遺産データ : supabase-seed.sql
+#    - study_records テーブル + RLS       : supabase/schema.sql
+#    ※ data/*.ts を更新した場合は `npm run seed` で supabase-seed.sql を再生成
 
-# 開発サーバー起動
+# 4. 開発サーバー起動
 npm run dev
 ```
 
@@ -64,8 +70,9 @@ npm run dev
 詳細は [docs/deploy-vercel.md](docs/deploy-vercel.md) を参照。
 
 ```bash
-# 環境変数
-DATABASE_URL=postgresql://... # Vercel Postgres等
+# 環境変数 (Vercel Project Settings → Environment Variables)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
 # ビルド
 npm run build
@@ -84,10 +91,10 @@ app/                    # Next.js App Router
   dashboard/            # ダッシュボード
   api/                  # API Routes
 components/             # UIコンポーネント
-data/                   # 世界遺産データ(TypeScript)
-lib/                    # ユーティリティ
-prisma/                 # Prisma schema & migrations
-scripts/                # シードスクリプト
+data/                   # 世界遺産データ(TypeScript, 全301件)
+lib/                    # ユーティリティ(supabase/auth/学習データ/復習スコア)
+supabase/               # Supabase schema (study_records + RLS)
+scripts/                # SQL生成・データ検証スクリプト
 docs/                   # ドキュメント
   research.md           # リサーチ結果
   data-sourcing.md      # データソース方針

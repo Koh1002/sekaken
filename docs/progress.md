@@ -11,7 +11,7 @@
 - 確認結果: Next.js 15 + Prisma + SQLite(ローカル) / Postgres(本番) 構成
 
 ## Phase 3: データ収集パイプライン ✅ 完了
-- 実施内容: UNESCO公式サイトをリサーチし、日本全26件+海外155件=合計181件のデータを収集・整備
+- 実施内容: UNESCO公式サイトをリサーチし、世界遺産データを収集・整備（後に301件まで拡充）
 - 作成ファイル:
   - data/japan-heritages.ts (日本26件)
   - data/world-heritages-europe.ts (ヨーロッパ・北米54件)
@@ -24,10 +24,12 @@
 - 日本の全世界遺産26件を網羅（文化20、自然5、複合1）
 - 検定2級重要遺産（第1号遺産、負の遺産、抹消遺産、複合遺産等）をカバー
 
-## Phase 4: DB/Prisma/seed ✅ 完了
-- 実施内容: Next.js初期化、Prisma設定、migration、seedスクリプト実装
-- 作成ファイル: scripts/seed-db.ts, prisma/schema.prisma
-- 確認結果: 181件全件DBに投入成功
+## Phase 4: DB/seed ✅ 完了（後にSupabaseへ移行）
+- 当初: Next.js初期化、Prisma設定、seedスクリプト実装
+- 移行: Prisma + SQLite/Postgres 構成から **Supabase(supabase-js)直接アクセス**へ統一
+  - データ投入は scripts/generate-sql.ts → supabase-seed.sql → Supabase SQL Editor
+  - Prisma関連ファイル(prisma/schema.prisma, scripts/seed-db.ts)は削除済み
+- 確認結果: 301件全件Supabaseに投入
 
 ## Phase 5: 一覧/地図/詳細 ✅ 完了
 - 実施内容: 一覧ページ(検索/フィルタ/カード・テーブル切替)、地図ページ(Leafletマーカー/フィルタ/ポップアップ)、詳細ページ(遺産情報/写真/地図/出典/クイズ遷移)
@@ -65,7 +67,7 @@
 ## Phase 12: 総合検証と修復 ✅ 完了
 - build: ✅ 成功
 - typecheck: ✅ 成功 (tsc --noEmit エラーなし)
-- seed: ✅ 181件投入成功
+- seed: ✅ 301件投入成功
 - 全ページ構成:
   - / (トップ): 学習開始/地図/写真/クイズ/復習/ダッシュボードリンク ✅
   - /heritage (一覧): 検索/フィルタ/カード・テーブル切替/復習ボタン ✅
@@ -75,3 +77,11 @@
   - /quiz (クイズ): 6タイプ/正答率/誤答一覧/間違えた問題復習 ✅
   - /review (復習): リスト/高優先度フィルタ/優先度表示/全部復習/写真復習 ✅
   - /dashboard (ダッシュボード): 統計/間違えた遺産/おすすめ復習 ✅
+
+## Phase 13: Supabase認証・クラウド同期 ✅ 完了
+- 実施内容: Supabase Authによる任意ログイン、ログイン時の学習データ(study_records)双方向同期、RLS設定
+- 作成ファイル: lib/auth-context.tsx, app/auth/page.tsx, supabase/schema.sql, lib/study-storage.ts(ハイブリッド化)
+
+## Phase 14: ドキュメント実態整合・クイズフィルタ拡張 ✅ 完了
+- ドキュメント修正: README/architecture/deploy-vercel/progress をSupabase実態(301件・supabase-js直叩き・認証あり)へ整合。死蔵Prismaコード(prisma/schema.prisma, scripts/seed-db.ts)を削除
+- クイズ改修: クイズ生成API(/api/quiz)と設定UIを一覧ページと機能統一。出題範囲を全6地域へ拡張し、カテゴリ・重要度フィルタを追加

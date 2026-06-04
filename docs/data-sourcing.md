@@ -53,12 +53,12 @@ UNESCO APIが直接利用不可(403)のため、以下の複合戦略を採用�
 
 ## 再実行方法
 
+> 注: 下記はリサーチ当時の想定フロー。現行のデータ投入は `npm run seed`(scripts/generate-sql.ts) で supabase-seed.sql を生成し、Supabase SQL Editorで実行する方式。`scripts/seed-db.ts`(Prisma)は廃止済み。
+
 ```bash
-npx ts-node scripts/fetch-unesco-list.ts    # データ取得
-npx ts-node scripts/enrich-heritage-data.ts # 補完
-npx ts-node scripts/normalize-data.ts       # 正規化
-npx ts-node scripts/validate-data.ts        # バリデーション
-npx ts-node scripts/seed-db.ts              # DB投入
+npx tsx scripts/validate-data.ts            # バリデーション
+npm run seed                                # supabase-seed.sql を生成
+# → 生成された supabase-seed.sql を Supabase SQL Editor で実行
 ```
 
 ## 出典管理
