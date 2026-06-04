@@ -2,6 +2,7 @@ import { supabase, toHeritage } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import { QuizQuestion } from "@/lib/types";
 import { Heritage } from "@/lib/types";
+import { CRITERIA, parseCriteria } from "@/lib/criteria";
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -10,6 +11,38 @@ function shuffle<T>(arr: T[]): T[] {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+/** 登録基準の意味クイズ: 遺産DBに依存しない固定問題バンクから生成 */
+function generateCriteriaMeaningQuestions(count: number): QuizQuestion[] {
+  const pool = shuffle(CRITERIA).slice(0, count);
+  return pool.map((c, idx) => {
+    // 記号→意味 と 意味→記号 を交互に出題
+    const askMeaning = idx % 2 === 0;
+    if (askMeaning) {
+      const distractors = shuffle(CRITERIA.filter((o) => o.id !== c.id)).slice(0, 3);
+      const options = shuffle([c.short, ...distractors.map((o) => o.short)]);
+      return {
+        id: `cm-${idx}-${c.id}`,
+        type: "criteria-meaning" as const,
+        question: `世界遺産の登録${c.label}が示す内容として正しいものはどれですか？`,
+        options,
+        correctIndex: options.indexOf(c.short),
+        heritageId: 0,
+      };
+    } else {
+      const distractors = shuffle(CRITERIA.filter((o) => o.id !== c.id)).slice(0, 3);
+      const options = shuffle([c.id, ...distractors.map((o) => o.id)]);
+      return {
+        id: `cm-${idx}-${c.id}`,
+        type: "criteria-meaning" as const,
+        question: `「${c.short}」を示す登録基準はどれですか？`,
+        options,
+        correctIndex: options.indexOf(c.id),
+        heritageId: 0,
+      };
+    }
+  });
 }
 
 /** 通常クイズ用: 世界遺産ごとにバリエーション豊かな問題文を生成 */
@@ -64,6 +97,11 @@ export async function GET(request: NextRequest) {
   const region = searchParams.get("region");
   const ids = searchParams.get("ids");
   const importance = searchParams.get("importance");
+
+  // 登録基準の意味クイズは遺産DBに依存しないため先に処理
+  if (type === "criteria-meaning") {
+    return NextResponse.json(generateCriteriaMeaningQuestions(count));
+  }
 
   let query = supabase.from("heritages").select("*");
 
@@ -168,6 +206,34 @@ export async function GET(request: NextRequest) {
           options = ["○", "×"];
           correctIndex = 1;
         }
+        break;
+      }
+      case "criteria": {
+        question = `「${h.nameJa}」が世界遺産に登録された登録基準として正しいものはどれですか？`;
+        const correct = h.unescoCriteria || "";
+        // 正解と異なり、互いに重複しない登録基準を最大3つ集める
+        const distractors = new Set<string>();
+        for (const o of shuffle(allHeritages)) {
+          if (distractors.size >= 3) break;
+          const c = o.unescoCriteria || "";
+          if (c && c !== correct) distractors.add(c);
+        }
+        const allOpts = shuffle([correct, ...Array.from(distractors)]);
+        options = allOpts;
+        correctIndex = allOpts.indexOf(correct);
+        break;
+      }
+      case "year": {
+        question = `「${h.nameJa}」が世界遺産に登録されたのはいつですか？`;
+        // 正解年を含む4つの異なる年を集める
+        const years = new Set<number>([h.inscriptionYear]);
+        for (const o of shuffle(allHeritages)) {
+          if (years.size >= 4) break;
+          years.add(o.inscriptionYear);
+        }
+        const yearOpts = shuffle(Array.from(years));
+        options = yearOpts.map((y) => `${y}年`);
+        correctIndex = yearOpts.indexOf(h.inscriptionYear);
         break;
       }
       default: {

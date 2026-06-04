@@ -62,11 +62,12 @@ export default function QuizPage() {
     const q = questions[currentQ];
     const isCorrect = idx === q.correctIndex;
 
+    // heritageId が 0 の問題（登録基準の意味クイズ等）は遺産別の学習記録に紐づけない
     if (isCorrect) {
-      markCorrect(q.heritageId);
+      if (q.heritageId > 0) markCorrect(q.heritageId);
       recordCorrectAnswer();
     } else {
-      markWrong(q.heritageId);
+      if (q.heritageId > 0) markWrong(q.heritageId);
       recordWrongAnswer();
     }
 
@@ -109,6 +110,9 @@ export default function QuizPage() {
               <option value="description">説明から遺産名を当てる</option>
               <option value="map">地図から遺産を当てる</option>
               <option value="truefalse">○×問題</option>
+              <option value="criteria">登録基準を当てる（遺産→基準）</option>
+              <option value="criteria-meaning">登録基準の意味を覚える（基準⇔意味）</option>
+              <option value="year">登録年を当てる（遺産→年）</option>
             </select>
           </div>
 
@@ -168,6 +172,8 @@ export default function QuizPage() {
     const total = results.length;
     const rate = Math.round((correct / total) * 100);
     const wrongResults = results.filter((r) => !r.isCorrect);
+    // 遺産に紐づく誤答のみ「間違えた問題だけ復習」の対象（基準の意味クイズ等は対象外）
+    const wrongHeritageIds = wrongResults.map((r) => r.heritageId).filter((id) => id > 0);
 
     return (
       <div className="max-w-lg mx-auto space-y-5">
@@ -215,13 +221,13 @@ export default function QuizPage() {
           <button onClick={() => (window.location.href = "/review")} className="flex-1 btn-secondary py-3 text-center">
             復習する
           </button>
-          {wrongResults.length > 0 && (
+          {wrongHeritageIds.length > 0 && (
             <button
-              onClick={() => { const wrongIds = wrongResults.map((r) => r.heritageId).join(","); window.location.href = `/quiz?ids=${wrongIds}`; }}
+              onClick={() => { window.location.href = `/quiz?ids=${wrongHeritageIds.join(",")}`; }}
               className="w-full py-3 rounded-xl font-semibold text-white text-center"
               style={{ background: "var(--danger)" }}
             >
-              間違えた問題だけ復習 ({wrongResults.length}問)
+              間違えた問題だけ復習 ({wrongHeritageIds.length}問)
             </button>
           )}
         </div>
