@@ -23,7 +23,7 @@ export interface Heritage {
 
 export interface QuizQuestion {
   id: string;
-  type: "name" | "country" | "photo" | "description" | "map" | "truefalse" | "criteria" | "year" | "criteria-meaning";
+  type: "name" | "country" | "photo" | "description" | "map" | "truefalse" | "criteria" | "year" | "criteria-meaning" | "concept" | "serial";
   question: string;
   options: string[];
   correctIndex: number;

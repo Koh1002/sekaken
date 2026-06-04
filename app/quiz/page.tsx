@@ -113,6 +113,8 @@ export default function QuizPage() {
               <option value="criteria">登録基準を当てる（遺産→基準）</option>
               <option value="criteria-meaning">登録基準の意味を覚える（基準⇔意味）</option>
               <option value="year">登録年を当てる（遺産→年）</option>
+              <option value="concept">概念・制度（基礎知識）</option>
+              <option value="serial">構成資産・所在地（日本の連続遺産）</option>
             </select>
           </div>
 

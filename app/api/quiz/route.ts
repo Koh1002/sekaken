@@ -2,7 +2,9 @@ import { supabase, toHeritage } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import { QuizQuestion } from "@/lib/types";
 import { Heritage } from "@/lib/types";
-import { CRITERIA, parseCriteria } from "@/lib/criteria";
+import { CRITERIA } from "@/lib/criteria";
+import { CONCEPT_QUESTIONS } from "@/lib/concept-questions";
+import { japanSerialProperties, PREFECTURES } from "@/data/japan-serial-properties";
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -43,6 +45,89 @@ function generateCriteriaMeaningQuestions(count: number): QuizQuestion[] {
       };
     }
   });
+}
+
+/** 概念・制度クイズ: 独自作問バンク(CONCEPT_QUESTIONS)から生成。options[0]が正解 */
+function generateConceptQuestions(count: number): QuizQuestion[] {
+  const pool = shuffle(CONCEPT_QUESTIONS).slice(0, count);
+  return pool.map((q, idx) => {
+    const correct = q.options[0];
+    const options = shuffle(q.options);
+    return {
+      id: `concept-${idx}-${q.id}`,
+      type: "concept" as const,
+      question: q.question,
+      options,
+      correctIndex: options.indexOf(correct),
+      heritageId: 0,
+    };
+  });
+}
+
+/** 構成資産・所在地クイズ: 日本の主要連続遺産データから生成 */
+function generateSerialQuestions(count: number): QuizQuestion[] {
+  const candidates: QuizQuestion[] = [];
+  const allCounts = Array.from(
+    new Set(
+      japanSerialProperties
+        .map((p) => p.totalAssets)
+        .filter((n): n is number => n != null)
+    )
+  );
+
+  for (const p of japanSerialProperties) {
+    // A: 構成資産数
+    if (p.totalAssets != null) {
+      const nums = [p.totalAssets, ...shuffle(allCounts.filter((c) => c !== p.totalAssets)).slice(0, 3)];
+      let off = 1;
+      while (nums.length < 4) {
+        const cand = p.totalAssets + off;
+        if (cand > 0 && !nums.includes(cand)) nums.push(cand);
+        off = off > 0 ? -off : -off + 1;
+      }
+      const opts = shuffle(nums);
+      candidates.push({
+        id: `serial-count-${p.heritageId}`,
+        type: "serial",
+        question: `「${p.nameJa}」の構成資産はいくつですか？`,
+        options: opts.map((n) => `${n}件`),
+        correctIndex: opts.indexOf(p.totalAssets),
+        heritageId: p.heritageId,
+      });
+    }
+
+    // B: 所在都道府県(正しいものを選ぶ)
+    {
+      const nonMembers = shuffle(PREFECTURES.filter((pr) => !p.prefectures.includes(pr))).slice(0, 3);
+      const correct = shuffle(p.prefectures)[0];
+      const opts = shuffle([correct, ...nonMembers]);
+      candidates.push({
+        id: `serial-pref-${p.heritageId}`,
+        type: "serial",
+        question: `「${p.nameJa}」の構成資産がある都道府県はどれですか？`,
+        options: opts,
+        correctIndex: opts.indexOf(correct),
+        heritageId: p.heritageId,
+      });
+    }
+
+    // C: 構成資産が無い都道府県(3県以上にまたがる遺産のみ)
+    if (p.prefectures.length >= 3) {
+      const correct = shuffle(PREFECTURES.filter((pr) => !p.prefectures.includes(pr)))[0];
+      const members = shuffle(p.prefectures).slice(0, 3);
+      const opts = shuffle([correct, ...members]);
+      candidates.push({
+        id: `serial-nopref-${p.heritageId}`,
+        type: "serial",
+        question: `「${p.nameJa}」の構成資産が無い都道府県はどれですか？`,
+        options: opts,
+        correctIndex: opts.indexOf(correct),
+        heritageId: p.heritageId,
+      });
+    }
+  }
+
+  return shuffle(candidates).slice(0, count);
 }
 
 /** 通常クイズ用: 世界遺産ごとにバリエーション豊かな問題文を生成 */
@@ -98,9 +183,15 @@ export async function GET(request: NextRequest) {
   const ids = searchParams.get("ids");
   const importance = searchParams.get("importance");
 
-  // 登録基準の意味クイズは遺産DBに依存しないため先に処理
+  // 遺産DBに依存しない固定バンク系は先に処理
   if (type === "criteria-meaning") {
     return NextResponse.json(generateCriteriaMeaningQuestions(count));
+  }
+  if (type === "concept") {
+    return NextResponse.json(generateConceptQuestions(count));
+  }
+  if (type === "serial") {
+    return NextResponse.json(generateSerialQuestions(count));
   }
 
   let query = supabase.from("heritages").select("*");
